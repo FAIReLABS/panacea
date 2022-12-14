@@ -1,0 +1,5 @@
+panacea
+.vscode/*.json
+extdata/2018-01-19-GLENDON/*.chk_is
+extdata/2018-01-19-GLENDON/*.is_txt
+extdata/2018-01-19-GLENDON/*.stat
