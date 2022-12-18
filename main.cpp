@@ -22,36 +22,57 @@ std::regex create_regex(std::string sep)
 	return std::regex(st.c_str());
 }
 
-void print_regex(std::string st, std::regex rg)
+void print_regex(std::smatch hits)
+{
+	// before regex match
+	std::cout << "Prefix: " << hits.prefix() << '\n';
+	
+	// subgroups
+	for (size_t i = 0; i < hits.size(); ++i) 
+		std::cout << i << ": " << hits[i] << '\n'; 
+
+	// behind regex match	
+	std::cout << "Suffix: " << hits.suffix() << '\n';
+
+}
+
+std::map<std::string, std::string> decompose_text(std::string st, std::regex rg)
 {
 	// holds regex results
 	std::smatch sm;
 
-	while(regex_search(st, sm, rg)){
-		
-		// before regex match
-		std::cout << "Prefix: " << sm.prefix() << '\n';
-		
-		// subgroups
-		for (size_t i = 0; i < sm.size(); ++i) 
-			std::cout << i << ": " << sm[i] << '\n'; 
+	std::map<std::string, std::string> out;
 
-		// behind regex match	
-		std::cout << "Suffix: " << sm.suffix() << '\n';
+	while(regex_search(st, sm, rg)) {
+		
+		// print
+		print_regex(sm);
+
+		// pair holds result
+		if (!sm.empty()) {
+			out.insert(std::make_pair(static_cast<std::string>(sm[0]), static_cast<std::string>(sm.suffix())));
+		}
+
+		// return suffix until no more text
 		st = sm.suffix();
+		
 	}
+
+	return out;
 }
 
-std::vector<int> char_frq(std::string fil, std::vector<std::string> rg)
+std::multimap<int, std::string> char_frq(std::string fil, std::vector<std::string> rg)
 {
 
 	// save hits
-	std::vector<int> sum;
+	std::multimap<int, std::string> sum;
 
 	for (const auto &i: rg) {
 	
-		// get regex
-		std::regex reg(i.c_str());
+		// get regex and add spaces 
+		std::string add_space;
+		add_space = ("\\s*" + i) + "\\s*";
+		std::regex reg(add_space.c_str());
 
 		// open file
 		std::ifstream inf(fil.c_str());
@@ -76,8 +97,9 @@ std::vector<int> char_frq(std::string fil, std::vector<std::string> rg)
 		};
 		
 		// add element iteratively (most efficient)
-		sum.push_back(sub);
-
+		// sum.push_back(sub);
+		sum.insert(std::make_pair(sub, i));
+		
 		// inf.close();
 
 	};
@@ -85,8 +107,6 @@ std::vector<int> char_frq(std::string fil, std::vector<std::string> rg)
 	return sum;	
 
 }
-
-
 
 int main()
 {
@@ -101,25 +121,17 @@ int main()
 	}
 
 	// count punctuation
-	std::vector<std::string> reg{"\\s*:\\s*", "\\s*\\=\\s*", "\\s*\\/\\s*"}; //
-	std::vector<int> table(0);
+	std::vector<std::string> reg{":", "=", "\\/", "\\(.*\\)"}; //
+	std::multimap<int, std::string>  table;
 	table = char_frq("extdata/2018-01-19-GLENDON/2018-01-19-GLENDON_1_1.chk_is", reg);
 
-	// total counts punctuation
-	double tot{0};
-	for (const auto &i : table) {
-		tot += i;
-	}
-
 	// frequencies punctuation
-	for (auto &i : table) {
-		double freq{0};
-		freq = i / tot;
-		std::cout << "Frequency: " << freq << '\n';
+	for (const auto &i : table) {
+		std::cout << "Character '"  << i.second << "' has been found: " << i.first << " times\n";
 	}
 
 	// most abundant punctuation (I need to use mapping here)
-	std::string sep_one{":"};
+	std::string sep_one{"="};
 
 	// Define a regex pattern
 	std::regex var = create_regex(sep_one);
@@ -131,7 +143,8 @@ int main()
 		std::getline(inf, strInput);
 
 		// print regex matches
-		print_regex(strInput, var);
+		std::map<std::string, std::string> pr;
+		pr = decompose_text(strInput, var);
 		
 	}
 
