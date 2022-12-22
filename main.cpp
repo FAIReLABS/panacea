@@ -8,23 +8,30 @@
 
 std::regex create_regex(std::string sep) 
 {
+	std::string st;
 	// let user assign variable name
 	std::cout << "Enter variable:\n";
-	std::string st;
 	std::cin >> st;
 
 	// combine to form regex
-	st += "(.*?)(";
+	if (st != ".") {
+
+		st += "(.*?)(";
 	// include punctuation
-	st += sep + "+?)";  
-	
+		st += sep + "+?)";
+
+	} else {
+
+		st = "([a-zA-Z\\s\\.\\(\\)]+?)\\s*(:+?)\\s*[-+]?([0-9]*\\.[0-9]+|[0-9]+)(\\s)";
+	}
+
 	// cast to regex type and return
 	return std::regex(st.c_str());
 }
 
 void print_regex(std::smatch hits)
 {
-	// before regex match
+/* 	// before regex match
 	std::cout << "Prefix: " << hits.prefix() << '\n';
 	
 	// subgroups
@@ -32,30 +39,32 @@ void print_regex(std::smatch hits)
 		std::cout << i << ": " << hits[i] << '\n'; 
 
 	// behind regex match	
-	std::cout << "Suffix: " << hits.suffix() << '\n';
+	std::cout << "Suffix: " << hits.suffix() << '\n'; */
+
+	std::cout << "Variable: " << hits[1] << '\n';
+	std::cout << "Value: " << hits[3] << '\n';
+
 
 }
 
-std::map<std::string, std::string> decompose_text(std::string st, std::regex rg)
+std::vector<std::string> decompose_text(std::string st, std::regex rg)
 {
 	// holds regex results
 	std::smatch sm;
 
-	std::map<std::string, std::string> out;
+	std::vector<std::string> out;
 
 	while(regex_search(st, sm, rg)) {
 		
 		// print
 		print_regex(sm);
 
-		// pair holds result
-		if (!sm.empty()) {
-			out.insert(std::make_pair(static_cast<std::string>(sm[0]), static_cast<std::string>(sm.suffix())));
-		}
+		// vector holds result
+		out.push_back(static_cast<std::string>(sm[0]));
+		out.push_back(static_cast<std::string>(sm.suffix()));
 
 		// return suffix until no more text
 		st = sm.suffix();
-		
 	}
 
 	return out;
@@ -131,7 +140,10 @@ int main()
 	}
 
 	// most abundant punctuation (I need to use mapping here)
-	std::string sep_one{"="};
+	
+	auto pr = std::max_element(table.begin(), table.end(), [](const auto &x, const auto &y) { return x.second > y.second; });
+	std::string sep_one{pr->second};
+	// std::cout << pr->second << std::endl; 
 
 	// Define a regex pattern
 	std::regex var = create_regex(sep_one);
@@ -143,7 +155,7 @@ int main()
 		std::getline(inf, strInput);
 
 		// print regex matches
-		std::map<std::string, std::string> pr;
+		std::vector<std::string> pr;
 		pr = decompose_text(strInput, var);
 		
 	}
