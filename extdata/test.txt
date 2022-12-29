@@ -1,0 +1,12 @@
+numeric   : 42
+numeric   : 42 um
+foo = 42 / bar = -41 / baz = 40 
+foo = 42  bar = -41  baz = 40 
+foo = 42 : bar = -41 : baz = 40 
+compounded numeric   : x=-12761 um / y=-13469 um / z=3709 um
+compounded numeric   : x=-12761 um / y=-13469 um / z=3709 um / compounded numeric   : x=-12761 um / y=-13469 um / z=3709 um
+double compounded numeric   : compounded numeric   : x=-12761 um / y=-13469 um / z=3709 um
+Lorem Ipsum (numeric : 42) Lorem Ipsum
+Lorem Ipsum (numeric) : 42 Lorem Ipsum
+
+compounded nominal   : x=foo y=bar z=bar  baz / compounded nominal   : x=foo y=bar z=bar  baz
