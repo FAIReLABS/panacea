@@ -49,8 +49,7 @@ std::regex regex_numeric_vars(std::string assign_operator, std::string user)
 {
 
 	std::string punct = paste_punct_values(assign_operator, "");
-	std::string punct_begin = "[" + punct + "\\(]";
-	std::string punct_end = "[" + punct + "\\)]";
+
 
 	// negate assign operator
 	std::string not_assign_operator = "[^" + assign_operator + "]";
@@ -67,17 +66,21 @@ std::regex regex_numeric_vars(std::string assign_operator, std::string user)
 	}
 	var = "(" + var + ")";
 
+	std::string punct_begin = "\\((?=[^" + assign_operator + "\\)]+" + assign_operator + not_assign_operator + "+\\))|[" + punct + "]"; 
+	std::string punct_end = "[" + punct + "\\)]";
+
 	// assignement operator
 	assign_operator = "(" + assign_operator + ")\\s*?"; 
 
 	std::string num = "([-+]??[0-9]*?\\.[0-9]+?|[-+]??[0-9]+?)"; // numeric 
-	std::string unit = "\\s*?\\(??([a-zA-Z%]+)??\\)??\\s??"; // unit
+	std::string unit = "\\s+?\\(??\\s*?([0-9a-zA-Z%]+)??\\s*?\\)??\\s??"; // unit
+
 
 	// boundaries
-	std::string begin = "(^" + not_assign_operator + "+(" + punct_begin + ")+)?"; // begin of triplet
-	std::string end = "(" + punct_end + "|$|\\s{2}?)"; // end of triplet
+	std::string begin = "(" + not_assign_operator + "+(" + punct_begin + ")+)?"; // begin of triplet
+	std::string end = "(\\s*?" + punct_end + "|\\s*?$|\\s{2}?)"; // end of triplet
 
-	// std::cout <<  begin + var + assign_operator + num + unit + end << '\n';
+	/* std::cout <<  begin + var + assign_operator + num + unit + end << '\n'; */
 
 	// cast to regex type and return
 	std::string st =  begin + var + assign_operator + num + unit + end ;

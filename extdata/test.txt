@@ -7,6 +7,8 @@ compounded numeric   : x=-12761 um / y=-13469 um / z=3709 um
 compounded numeric   : x=-12761 um / y=-13469 um / z=3709 um / compounded numeric   : x=-12761 um / y=-13469 um / z=3709 um
 double compounded numeric   : compounded numeric   : x=-12761 um / y=-13469 um / z=3709 um
 Lorem Ipsum (numeric : 42) Lorem Ipsum
-Lorem Ipsum (numeric) : 42 Lorem Ipsum
+Lorem Ipsum (numeric) : 42
+Lorem Ipsum (numeric) : 42 /
+Lorem Ipsum (numeric) : 42 )
 
-compounded nominal   : x=foo y=bar z=bar  baz / compounded nominal   : x=foo y=bar z=bar  baz
+compounded nominal   : x=foo y=bar z=bar  baz 

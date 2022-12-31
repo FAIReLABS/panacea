@@ -13,7 +13,8 @@ int main(int argc, char **argv)
 		std::cerr << "Could not be opened for reading!\n";
 		return 1;
 	}
-	
+
+
 	// let user assign variable name
 	std::string user_input{"."};
 	std::cout << "Enter variable:\n";
@@ -21,13 +22,14 @@ int main(int argc, char **argv)
 
 	while (inf) 
 	{
-		
 		// read stuff from the file into a string and print it
 		std::string file_input;
 		std::getline(inf, file_input);
 
 		// print regex matches
 		std::vector<std::string> pr;
+
+		// phase 0 skip tables with continue statement
 
 		// phase 1 - detect assignment operator
 		std::string assign_operator = detect_assign_operator(file_input);
@@ -40,6 +42,8 @@ int main(int argc, char **argv)
 		}
 		
 	}
+
+	// phase 4 - use results of phase 2 as gold labels to detect nominal variable value pairs
 
 	return 0;
 
