@@ -18,6 +18,7 @@ std::vector<std::string>  detect_numeric_vars(std::string st, std::regex regex);
 void print_regex(std::smatch hits, bool verbose);
 std::multimap<int, std::string, std::greater<int>> char_frq(std::string fil, std::vector<std::string> rg);
 std::regex regex_numeric_vars(std::string assign_operator, std::string user);
+std::string trim_str(std::string x);
 
 
 #endif

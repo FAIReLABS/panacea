@@ -14,7 +14,6 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-
 	// let user assign variable name
 	std::string user_input{"."};
 	std::cout << "Enter variable:\n";
