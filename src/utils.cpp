@@ -14,18 +14,18 @@ void print_regex(std::smatch hits, bool verbose)
 	if (verbose) 
 	{
 		// before regex match
-		std::cout << "Prefix: " << hits.prefix() << '\n';
+		std::cout << "Prefix: " << std::quoted(hits.prefix().str()) << '\n';
 	
 		// subgroups
 		for (size_t i = 0; i < hits.size(); ++i)
 			std::cout << i << ": " << std::quoted(hits[i].str()) << '\n';
 
 		// behind regex match
-		std::cout << "Suffix: " <<  hits.suffix() << '\n';
+		std::cout << "Suffix: " <<  std::quoted(hits.suffix().str()) << '\n';
 
 	} else {
 		// print triplets 
-		std::cout << "Variable: " << std::quoted(trim_str(hits[3])) << '\n';
+		std::cout << "Variable: " << trim_str(hits[3]) << '\n';
 		std::cout << "Value: " << trim_str(hits[5]) << '\n';
 		std::cout << "Unit: " << trim_str(hits[6]) << '\n';
 

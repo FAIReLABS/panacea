@@ -18,38 +18,10 @@ std::string paste_punct_values(std::string x,  std::string collapse)
 
 }
 
-/* determine the assignement operators for unambigous case of numerical assignement */
-std::string detect_assign_operator(std::string st)
-{
-	// holds regex results
-	std::smatch assign_match;
-
-	// unambigous case of numerical assignement
-	std::regex assign_regex("(([:=]+?)\\s*)(?=([-+]?[0-9]*\\.[0-9]+|[-+]?[0-9]+))");
-
-	// std::string weak_search;
-	std::string out;
-
-	// search
-	while (regex_search(st, assign_match, assign_regex))
-	{
-		// return
-		out = assign_match[2];
-		// return suffix until no more text
-		st = assign_match.suffix();
-	}
-
-	// std::cout << "Assignement operator: " << out << '\n';
-
-	return out;
-
-}
-
 std::regex regex_numeric_vars(std::string assign_operator, std::string user)
 {
 
 	std::string punct = paste_punct_values(assign_operator, "");
-
 
 	// negate assign operator
 	std::string not_assign_operator = "[^" + assign_operator + "]";
@@ -61,7 +33,9 @@ std::regex regex_numeric_vars(std::string assign_operator, std::string user)
 	{
 		not_assign_operator += "*?"; // for partial matches
 		var = not_assign_operator + user + not_assign_operator;
-	} else {
+	} 
+	else 
+	{
 		var = not_assign_operator + "+?"; // requires at least on hit for char that is not a seperator
 	}
 	var = "(" + var + ")";
@@ -72,10 +46,6 @@ std::regex regex_numeric_vars(std::string assign_operator, std::string user)
 	// assignement operator
 	assign_operator = "(" + assign_operator + ")\\s*?"; 
 
-	std::string num = "([-+]??[0-9]*?\\.[0-9]+?|[-+]??[0-9]+?)"; // numeric 
-	std::string unit = "\\s+?\\(??\\s*?([0-9a-zA-Z%]+)??\\s*?\\)??\\s??"; // unit
-
-
 	// boundaries
 	std::string begin = "(" + not_assign_operator + "+(" + punct_begin + ")+)?"; // begin of triplet
 	std::string end = "(\\s*?" + punct_end + "|\\s*?$|\\s{2}?)"; // end of triplet
@@ -83,8 +53,28 @@ std::regex regex_numeric_vars(std::string assign_operator, std::string user)
 	/* std::cout <<  begin + var + assign_operator + num + unit + end << '\n'; */
 
 	// cast to regex type and return
-	std::string st =  begin + var + assign_operator + num + unit + end ;
+	std::string st =  begin + var + assign_operator + std::string(num_lz) + std::string(unit_lz) + end ;
 	return std::regex(st.c_str());
 
 }
 
+void detect_numeric_vars(std::string st, std::string assign_operator, std::string user_input)
+{
+	// create regex
+	std::regex rg = regex_numeric_vars(assign_operator, user_input);
+
+	// holds regex results
+	std::smatch hits;
+	std::vector<std::string> search_out;
+
+	while (regex_search(st, hits, rg))
+	{
+
+		print_regex(hits, false);
+	
+		// return suffix until no more text
+		st = hits.suffix();
+	}
+
+	/* return search_out; */
+}
