@@ -8,7 +8,7 @@ std::string trim_str(std::string x)
 	return x;
 }
 
-void print_regex(std::smatch hits, bool verbose)
+void print_regex(std::smatch hits, bool verbose, int charn)
 {
 	
 	if (verbose) 
@@ -25,9 +25,13 @@ void print_regex(std::smatch hits, bool verbose)
 
 	} else {
 		// print triplets 
-		std::cout << "Variable: " << trim_str(hits[3]) << '\n';
-		std::cout << "Value: " << trim_str(hits[5]) << '\n';
-		std::cout << "Unit: " << trim_str(hits[6]) << '\n';
+		/* std::cout << "Field: " << "" << '\n'; */
+		
+		std::cout << "Char: " << charn << '\n';
+		std::cout << "Variable: " << trim_str(hits[2]) << '\n';
+		std::cout << "Value: " << trim_str(hits[3]) << '\n';
+		std::cout << "Unit: " << trim_str(hits[4]) << '\n';
+		std::cout << '\n';
 
 	}
 }

@@ -1,44 +1,55 @@
 #include "panacea.hpp"
 
-// row stores values of  potential column
-std::vector<int> parse_line(std::string line, std::vector<std::string> &row)
+// row storage of  potential columns
+std::vector<int> parse_line(std::string line, std::vector<std::string> &row, 	std::vector<int> &pos)
 {
 
 	// storage containers
 	std::smatch hits; // matches
 	std::vector<int> out; // integers for determening whether this could be a table
+	
+	// position of char
+	int charn{1};
 
 	// make regex
-	std::string rgnum = "(\\s|^)" + std::string(num) + "(\\s|$)";
+	std::string rgnum = "(?:\\s|^)" + std::string(num) + "(?:\\s|$)";
 	std::regex rg(rgnum.c_str());
 
 	// decompose potential tables
 	while (regex_search(line, hits, rg))
 	{
 
-		/* when not all space then this must be nominal */
+		// when not all space then this must be nominal
 		std::string pre = hits.prefix();
 		if (!std::all_of(pre.begin(), pre.end(), isspace))
 		{
 			out.push_back(0);
 			row.push_back(pre);
+			pos.push_back(charn);
 		}
 
-		/* this must be numeric */
-		if (hits[2] != "")
+		// this must be numeric
+		if (hits[1] != "")
 		{
 			out.push_back(1);
-			row.push_back(hits[2]);
+			row.push_back(hits[1]);
+			charn += pre.length();
+			pos.push_back(1);
 		}
 
-		/* when the original hit is false for the postfix then this must be nominal */
+		// when the original hit is false for the postfix then this must be nominal
 		line = hits.suffix();
 		std::smatch inner;
 		if (!(line == "" || regex_search(line, inner, rg)))
 		{
 			out.push_back(0);
 			row.push_back(line);
+			charn += hits[1].length();
+			pos.push_back(1);
 		}
+
+		// return character position to start of loop
+		charn += line.length();
 
 		/* helper */
 		// print_regex(hits, true);
@@ -71,7 +82,7 @@ int cnt_chars(std::string st)
 }
 
 // detecting tables
-bool is_table(std::vector<std::string> &chunk, std::vector<std::vector<std::string>> &table) 
+bool is_table(std::vector<std::string> &chunk, std::vector<std::vector<std::string>> &table, std::vector<std::vector<int>> &origin) 
 {
 	// store relative counts characters
 	double rel_cnt;
@@ -88,11 +99,18 @@ bool is_table(std::vector<std::string> &chunk, std::vector<std::vector<std::stri
 	{
 		// store values of row
 		std::vector<std::string> row;
-		std::vector<int> int_line = parse_line(i, row);
+		// store positions of values
+		std::vector<int> pos;
+		// store integer representation
+		std::vector<int> int_line = parse_line(i, row, pos);
 
 		// add rows to table
 		if (!row.empty())
 			table.push_back(row);
+		
+		// add rows to table
+		if (!pos.empty())
+			origin.push_back(pos);
 
 		// bump number to count number of lines containing possible columns
 		if (!int_line.empty())
@@ -169,6 +187,23 @@ std::vector<std::vector<std::string>> parse_table(std::vector<std::vector<std::s
 	return out;
 }
 
+std::vector<std::vector<int>> parse_table(std::vector<std::vector<int>> table)
+{
+
+	// store
+	std::vector<std::vector<int>> out(table[0].size(), std::vector<int>(table.size()));
+
+	for (std::vector<int>::size_type i = 0; i < table[0].size(); i++)
+	{ 
+		for (std::vector<int>::size_type j = 0; j < table.size(); j++) 
+		{
+			out[i][j] = table[j][i];
+		}
+	}
+
+	return out;
+}
+
 /* extract chunks of text that might be tables */
 void detect_tables(std::string line_input, std::vector<std::string> &chunk) 
 {
@@ -183,25 +218,36 @@ void detect_tables(std::string line_input, std::vector<std::string> &chunk)
 	{
 		// store potential table values
 		std::vector<std::vector<std::string>> table;
+		// store position of values
+		std::vector<std::vector<int>> origin;
+
 		// check whether it is a table
-		if (is_table(chunk, table))
+		if (is_table(chunk, table, origin))
 		{
 
-			std::vector<std::vector<std::string>> colwise = parse_table(table); 
+			// transpose tables
+			std::vector<std::vector<std::string>> colwise_table = parse_table(table); 
+			std::vector<std::vector<int>> colwise_origin = parse_table(origin); 
+			
 			// check
 			/* std::cout << "original: " << table.size() << '\n';
 			std::cout << "new: " << colwise.size() << '\n'; */
-			for (const auto &i: colwise)
+			for (auto i = 0; i < colwise_table.size(); i++)
 			{
+				std::cout << "Char: ";
+				for (std::vector<int>::size_type j = 0; j < colwise_origin[i].size(); j++)
+					std::cout << " " << colwise_origin[i][j] << " ";
+				std::cout << '\n';
 				std::cout << "Variable: \n";
 				std::cout << "Value: ";
-				for (const auto &j: i)
-					std::cout << std::string(" ") << trim_str(j) << std::string(" ");
+				for (std::vector<std::string>::size_type j = 0; j < colwise_table[i].size(); j++)
+					std::cout << " " << trim_str(colwise_table[i][j]) << " ";
 				std::cout << '\n';
 			}
-			
+
+			std::cout << '\n';
 		}
-		
+
 		/* std::cout << "<Empty line>\n"; */
 
 		// finally finish with a clean up

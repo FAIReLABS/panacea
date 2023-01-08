@@ -44,16 +44,16 @@ std::regex regex_numeric_vars(std::string assign_operator, std::string user)
 	std::string punct_end = "[" + punct + "\\)]";
 
 	// assignement operator
-	assign_operator = "(" + assign_operator + ")\\s*?"; 
+	assign_operator = "(?:" + assign_operator + ")\\s*?"; 
 
 	// boundaries
-	std::string begin = "(" + not_assign_operator + "+(" + punct_begin + ")+)?"; // begin of triplet
-	std::string end = "(\\s*?" + punct_end + "|\\s*?$|\\s{2}?)"; // end of triplet
+	std::string begin = "(" + not_assign_operator + "+(?:" + punct_begin + ")+)?"; // begin of triplet
+	std::string end = "(?:\\s*" + punct_end + "|\\s{2,}|\\t|\\n|\\r|\\v|\\f|\\s*$)"; // end of triplet
 
 	/* std::cout <<  begin + var + assign_operator + num + unit + end << '\n'; */
 
 	// cast to regex type and return
-	std::string st =  begin + var + assign_operator + std::string(num_lz) + std::string(unit_lz) + end ;
+	std::string st =  begin + var + assign_operator + num + unit + end ;
 	return std::regex(st.c_str());
 
 }
@@ -65,12 +65,20 @@ void detect_numeric_vars(std::string st, std::string assign_operator, std::strin
 
 	// holds regex results
 	std::smatch hits;
-	std::vector<std::string> search_out;
+
+	// position of char
+	int charn{1};
 
 	while (regex_search(st, hits, rg))
 	{
+	
+		// get start of triplet
+		charn +=  hits[1].length();
 
-		print_regex(hits, false);
+		print_regex(hits, false, charn);
+
+		// get end of triplet
+		charn += hits[0].length();
 	
 		// return suffix until no more text
 		st = hits.suffix();

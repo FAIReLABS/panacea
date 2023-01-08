@@ -19,6 +19,9 @@ int main(int argc, char **argv)
 	std::cout << "Enter variable:\n";
 	std::cin >> user_input;
 
+	// positions
+	// int line; 
+
 	/* store line output as chunks*/
 	std::vector<std::string> chunk; 
 
@@ -27,6 +30,9 @@ int main(int argc, char **argv)
 		// read from the file into a string and print it
 		std::string line_input;
 		std::getline(inf, line_input);
+
+		// count lines
+		/* std::cout << "Line: " << line++ << '\n'; */
 
 		// phase 1 - detect assignment operator
 		std::string assign_operator = detect_assign_operator(line_input);
