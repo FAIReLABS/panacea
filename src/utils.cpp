@@ -36,3 +36,59 @@ void print_regex(std::smatch hits, bool verbose, int charn)
 	}
 }
 
+// parse results column wise (works if inner vectors are of same size)
+std::vector<std::vector<std::string>> transpose_table(std::vector<std::vector<std::string>> table)
+{
+
+	// store
+	std::vector<std::vector<std::string>> out(table[0].size(), std::vector<std::string>(table.size()));
+
+	for (std::vector<std::string>::size_type i = 0; i < table[0].size(); i++)
+	{ 
+		for (std::vector<std::string>::size_type j = 0; j < table.size(); j++) 
+		{
+			out[i][j] = table[j][i];
+		}
+	}
+
+	return out;
+}
+
+std::vector<std::vector<int>> transpose_table(std::vector<std::vector<int>> table)
+{
+
+	// store
+	std::vector<std::vector<int>> out(table[0].size(), std::vector<int>(table.size()));
+
+	for (std::vector<int>::size_type i = 0; i < table[0].size(); i++)
+	{ 
+		for (std::vector<int>::size_type j = 0; j < table.size(); j++) 
+		{
+			out[i][j] = table[j][i];
+		}
+	}
+
+	return out;
+}
+
+// Function for counting spaces
+int cnt_chars(std::string st)
+{
+	// input sentence
+	char *buf = new char[st.length() + 1];
+	strcpy(buf, st.c_str());
+	char ch = buf[0];
+	int i{0};
+	int count{0};
+
+	// counting spaces
+	while (ch != '\0') {
+		ch = buf[i];
+		if (!isspace(ch))
+			count++;
+		i++;
+	}
+
+	// returning number of spaces
+	return (count);
+}

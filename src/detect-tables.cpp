@@ -10,9 +10,10 @@ std::vector<int> parse_line(std::string line, std::vector<std::string> &row, 	st
 	
 	// position of char
 	int charn{1};
+	int rem{0};
 
-	// make regex
-	std::string rgnum = "(?:\\s|^)" + std::string(num) + "(?:\\s|$)";
+	// make regex (include spaces before and behind to enable character position counts)
+	std::string rgnum = "(\\s+|^)" + std::string(num) + "(\\s+|$)";
 	std::regex rg(rgnum.c_str());
 
 	// decompose potential tables
@@ -29,27 +30,30 @@ std::vector<int> parse_line(std::string line, std::vector<std::string> &row, 	st
 		}
 
 		// this must be numeric
-		if (hits[1] != "")
+		if (hits[2] != "")
 		{
 			out.push_back(1);
-			row.push_back(hits[1]);
-			charn += pre.length();
-			pos.push_back(1);
+			row.push_back(hits[2]);
+			charn += hits[1].length() + (pre.length() - rem);
+			pos.push_back(charn);
 		}
 
-		// when the original hit is false for the postfix then this must be nominal
-		line = hits.suffix();
+		// when the original regex_search is false for the postfix then this remainder of the string must be nominal
+		line = hits[3].str() + hits.suffix().str();
 		std::smatch inner;
+		// return character position to start of loop with space character position after hit
+		charn += hits[2].length() + hits[3].length();
+		// remainder of suffix length when removing spaces in front
+		rem = hits[3].length();
+
 		if (!(line == "" || regex_search(line, inner, rg)))
 		{
 			out.push_back(0);
 			row.push_back(line);
-			charn += hits[1].length();
-			pos.push_back(1);
+			pos.push_back(charn);
 		}
 
-		// return character position to start of loop
-		charn += line.length();
+
 
 		/* helper */
 		// print_regex(hits, true);
@@ -57,28 +61,6 @@ std::vector<int> parse_line(std::string line, std::vector<std::string> &row, 	st
 	}
 
 	return out;
-}
-
-// Function for counting spaces
-int cnt_chars(std::string st)
-{
-	// input sentence
-	char *buf = new char[st.length() + 1];
-	strcpy(buf, st.c_str());
-	char ch = buf[0];
-	int i{0};
-	int count{0};
-
-	// counting spaces
-	while (ch != '\0') {
-		ch = buf[i];
-		if (!isspace(ch))
-			count++;
-		i++;
-	}
-
-	// returning number of spaces
-	return (count);
 }
 
 // detecting tables
@@ -169,41 +151,6 @@ bool is_table(std::vector<std::string> &chunk, std::vector<std::vector<std::stri
 	return out;
 }
 
-// parse results column wise (works if inner vectors are of same size)
-std::vector<std::vector<std::string>> parse_table(std::vector<std::vector<std::string>> table)
-{
-
-	// store
-	std::vector<std::vector<std::string>> out(table[0].size(), std::vector<std::string>(table.size()));
-
-	for (std::vector<std::string>::size_type i = 0; i < table[0].size(); i++)
-	{ 
-		for (std::vector<std::string>::size_type j = 0; j < table.size(); j++) 
-		{
-			out[i][j] = table[j][i];
-		}
-	}
-
-	return out;
-}
-
-std::vector<std::vector<int>> parse_table(std::vector<std::vector<int>> table)
-{
-
-	// store
-	std::vector<std::vector<int>> out(table[0].size(), std::vector<int>(table.size()));
-
-	for (std::vector<int>::size_type i = 0; i < table[0].size(); i++)
-	{ 
-		for (std::vector<int>::size_type j = 0; j < table.size(); j++) 
-		{
-			out[i][j] = table[j][i];
-		}
-	}
-
-	return out;
-}
-
 /* extract chunks of text that might be tables */
 void detect_tables(std::string line_input, std::vector<std::string> &chunk) 
 {
@@ -226,21 +173,21 @@ void detect_tables(std::string line_input, std::vector<std::string> &chunk)
 		{
 
 			// transpose tables
-			std::vector<std::vector<std::string>> colwise_table = parse_table(table); 
-			std::vector<std::vector<int>> colwise_origin = parse_table(origin); 
+			std::vector<std::vector<std::string>> colwise_table = transpose_table(table); 
+			std::vector<std::vector<int>> colwise_origin = transpose_table(origin); 
 			
 			// check
 			/* std::cout << "original: " << table.size() << '\n';
 			std::cout << "new: " << colwise.size() << '\n'; */
-			for (auto i = 0; i < colwise_table.size(); i++)
+			for (size_t i = 0; i < colwise_table.size(); i++)
 			{
 				std::cout << "Char: ";
-				for (std::vector<int>::size_type j = 0; j < colwise_origin[i].size(); j++)
+				for (size_t j = 0; j < colwise_origin[i].size(); j++)
 					std::cout << " " << colwise_origin[i][j] << " ";
 				std::cout << '\n';
 				std::cout << "Variable: \n";
 				std::cout << "Value: ";
-				for (std::vector<std::string>::size_type j = 0; j < colwise_table[i].size(); j++)
+				for (size_t j = 0; j < colwise_table[i].size(); j++)
 					std::cout << " " << trim_str(colwise_table[i][j]) << " ";
 				std::cout << '\n';
 			}

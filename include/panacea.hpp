@@ -28,6 +28,9 @@ void detect_tables(std::string line_input, std::vector<std::string> &chunk);
 // helper functions
 std::string trim_str(std::string x);
 void print_regex(std::smatch hits, bool verbose, int charn);
+std::vector<std::vector<std::string>> transpose_table(std::vector<std::vector<std::string>> table);
+std::vector<std::vector<int>> transpose_table(std::vector<std::vector<int>> table);
+int cnt_chars(std::string st);
 
 // regex for detecting values
 constexpr char num[] = "([-+]?[0-9]+\\.[0-9]+|[-+]?[0-9]+)"; // detect numeric values
