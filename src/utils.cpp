@@ -8,7 +8,42 @@ std::string trim_str(std::string x)
 	return x;
 }
 
-void print_regex(std::smatch hits, bool verbose, int charn)
+// filter units within variable names
+void detect_units(std::match_results<std::string::const_iterator> st, std::string &var, std::string &unit)
+{
+	// trim whitespace
+	var = trim_str(st[2].str());
+	unit = trim_str(st[4].str());
+		
+	std::smatch hits_unit;
+	std::regex rg_unit("(?:.*)(\\s*\\(\\s*([a-zA-Z%\\.]+[-]?[0-9]?)\\s*\\))");
+	
+	bool grep_unit = regex_search(var, hits_unit, rg_unit);
+	if (grep_unit)
+	{
+		unit = hits_unit[2].str();
+		var.erase(var.find(hits_unit[1].str()), hits_unit[1].str().size());
+	} 
+}
+
+void detect_units(std::string st, std::string &var, std::string &unit)
+{
+	// trim whitespace
+	var = trim_str(st);
+		
+	std::smatch hits_unit;
+	std::regex rg_unit("(?:.*)(\\s*\\(\\s*([a-zA-Z%\\.]+[-]?[0-9]?)\\s*\\))");
+	
+	bool grep_unit = regex_search(var, hits_unit, rg_unit);
+	if (grep_unit)
+	{
+		unit = hits_unit[2].str();
+		var.erase(var.find(hits_unit[1].str()), hits_unit[1].str().size());
+	} 
+}
+
+
+void print_regex(std::smatch hits, bool verbose, const int &charn, const int &field_num, const int &line_num)
 {
 	
 	if (verbose) 
@@ -24,13 +59,18 @@ void print_regex(std::smatch hits, bool verbose, int charn)
 		std::cout << "Suffix: " <<  std::quoted(hits.suffix().str()) << '\n';
 
 	} else {
-		// print triplets 
-		/* std::cout << "Field: " << "" << '\n'; */
 		
+		// detect units
+		std::string var;
+		std::string unit;
+		detect_units(hits, var, unit);
+		
+		std::cout << "Field: " << field_num << '\n';
+		std::cout << "Line: " << line_num << '\n';
 		std::cout << "Char: " << charn << '\n';
-		std::cout << "Variable: " << trim_str(hits[2]) << '\n';
-		std::cout << "Value: " << trim_str(hits[3]) << '\n';
-		std::cout << "Unit: " << trim_str(hits[4]) << '\n';
+		std::cout << "Variable: " << var << '\n';
+		std::cout << "Value: " << hits[3] << '\n';
+		std::cout << "Unit: " << unit << '\n';
 		std::cout << '\n';
 
 	}

@@ -37,17 +37,20 @@ int main(int argc, char **argv)
 		// count lines
 		line_num++; 
 
+		// phase 0 - detect dates
+		bool grep_date = detect_dates(line_input, field_num, line_num);
+
 		// phase 1 - detect assignment operator
 		std::string assign_operator = detect_assign_operator(line_input);
 
 		// phase 2 - if phase 1 true then extract assignement of numeric variables
-		if (!assign_operator.empty()) 
+		if (!grep_date && !assign_operator.empty()) 
 		{
-			detect_numeric_vars(line_input, assign_operator, user_input);
+			detect_numeric_vars(line_input, assign_operator, user_input, field_num, line_num);
 		}
 
 		// phase 3 - otherwise check wether text might include tables
-		if (assign_operator.empty())
+		if (!grep_date && assign_operator.empty())
 		{
 			detect_tables(line_input, chunk, field_num, line_num, chunk_lines); 
 		}

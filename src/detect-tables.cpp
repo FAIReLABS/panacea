@@ -234,6 +234,11 @@ void detect_tables(std::string line_input, std::vector<std::string> &chunk, int 
 			std::vector<std::string> header = split_header(chunk[0], colwise_origin);
 			// in case the size does not match extend with empty strings
 			header.resize(colwise_table.size());
+			// extract units where possible
+			std::vector<std::string> vars(header.size());
+			std::vector<std::string> units(header.size());
+			for (std::string::size_type i = 0; i < header.size(); i++)
+				detect_units(header[i], vars[i], units[i]);
 		
 			for (size_t i = 0; i < colwise_origin.size(); i++)
 			{
@@ -249,12 +254,15 @@ void detect_tables(std::string line_input, std::vector<std::string> &chunk, int 
 					std::cout << " " << colwise_origin[i][j] << " ";
 				std::cout << '\n';
 
-				std::cout << "Variable: " << header[i] << '\n';
+				std::cout << "Variable: " << vars[i] << '\n';
 				
 				std::cout << "Value: ";
 				for (size_t j = 0; j < colwise_table[i].size(); j++)
 					std::cout << " " << trim_str(colwise_table[i][j]) << " ";
 				std::cout << '\n';
+
+				std::cout << "Unit: " << units[i] << '\n';
+
 				std::cout << '\n';
 			}
 
