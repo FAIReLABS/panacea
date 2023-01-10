@@ -20,10 +20,13 @@ int main(int argc, char **argv)
 	std::cin >> user_input;
 
 	// positions
-	// int line; 
+	int line_num{0}; // count line numbers 
+	int field_num{0}; // count chunk numbers
 
-	/* store line output as chunks*/
+	// store line output as chunks
 	std::vector<std::string> chunk; 
+	// intermediate storage of lines for chunks
+	std::vector<int> chunk_lines; 
 
 	while (inf) 
 	{
@@ -32,7 +35,7 @@ int main(int argc, char **argv)
 		std::getline(inf, line_input);
 
 		// count lines
-		/* std::cout << "Line: " << line++ << '\n'; */
+		line_num++; 
 
 		// phase 1 - detect assignment operator
 		std::string assign_operator = detect_assign_operator(line_input);
@@ -46,8 +49,9 @@ int main(int argc, char **argv)
 		// phase 3 - otherwise check wether text might include tables
 		if (assign_operator.empty())
 		{
-			detect_tables(line_input, chunk); 
+			detect_tables(line_input, chunk, field_num, line_num, chunk_lines); 
 		}
+
 	}
 
 	// phase 4 - use results of phase 2 as gold labels to detect nominal variable value pairs

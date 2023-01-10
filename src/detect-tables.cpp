@@ -62,9 +62,31 @@ std::vector<int> parse_line(std::string line, std::vector<std::string> &row, 	st
 
 	return out;
 }
+// check if chunk lines are adjecent
+bool is_adjacent_chunk_lines(std::vector<int> &chunk_lines)
+{
+
+	// copyy from ref
+	std::vector<int> diff = chunk_lines;
+	// first differene line numbers
+	std::adjacent_difference(diff.begin(), diff.end(), diff.begin());
+	// drop first element for which no difference can be calculated
+	diff.erase(diff.begin());
+	// are all diferences 1 then lines are adjecent
+	bool adj = std::all_of(diff.begin(), diff.end(), [](int i){ return i == 1; });
+	
+	// clean chunk line numbers if not a table construct
+	if (!adj)
+		chunk_lines.clear();
+
+	/* for(const auto &i: chunk_lines)
+		std::cout << "Diff: " << i << '\n';
+	std::cout << "Are lines adjecent: " << adj << '\n'; */
+	return adj;
+}
 
 // detecting tables
-bool is_table(std::vector<std::string> &chunk, std::vector<std::vector<std::string>> &table, std::vector<std::vector<int>> &origin) 
+bool is_table(std::vector<std::string> &chunk, std::vector<std::vector<std::string>> &table, std::vector<std::vector<int>> &origin, std::vector<int> &chunk_lines) 
 {
 	// store relative counts characters
 	double rel_cnt;
@@ -142,26 +164,56 @@ bool is_table(std::vector<std::string> &chunk, std::vector<std::vector<std::stri
 	if (chunk.size() > 0) // if at least chunk size 1 line
 		rel_cnt = rel_cnt / chunk.size();
 	
-/* 	std::cout << "Amount of characters relative to white space: " << std::fixed << rel_cnt << '\n'; */
+	/* std::cout << "Amount of characters relative to white space: " << std::fixed << rel_cnt << '\n'; */
 
-	bool out = (j == 0 && rel_cnt < 0.6) ? true : false;
+	bool out = (j == 0 && rel_cnt < 0.5 && chunk_lines.size() > 2 && is_adjacent_chunk_lines(chunk_lines)) ? true : false;
 
 	/* std::cout << "Is this a table: " << out << '\n'; */
 	
 	return out;
 }
 
-/* extract chunks of text that might be tables */
-void detect_tables(std::string line_input, std::vector<std::string> &chunk) 
+std::vector<std::string> split_header(std::string header, std::vector<std::vector<int>> origin)
+{
+	// position of column names
+	std::vector<size_t> pos;
+	for (size_t i = 0; i < origin.size(); i++) 
+	{
+		// find minimum character position on line
+		pos.push_back(static_cast<size_t>(*std::min_element(origin[i].begin(), origin[i].end())));
+	}
+
+	// set the first element to beginning of line regardless
+	pos[0] = 1;
+
+	// extract column names based on positions
+	std::vector<std::string> out;
+	size_t i{1}; // second position
+	std::string colname;
+	while ((colname = header.substr(0, pos[i] - pos[i - 1])) != "") 
+	{
+		out.push_back(colname);
+		header.erase(0, pos[i] - pos[i - 1]);
+		i++;
+	}
+
+	return out;
+}
+
+/* extract chunks of text that might be tables. Add assign operator to prevent false positives!!*/
+void detect_tables(std::string line_input, std::vector<std::string> &chunk, int &field_num, int &line_num, std::vector<int> &chunk_lines) 
 {
 
-	/* accumulate untile empty line then flush */
-	if (!line_input.empty())
+	// accumulate untile empty line then flush
+	if (!(line_input.empty() || std::all_of(line_input.begin(), line_input.end(), isspace)))
 	{
+		// store chunk lines
 		chunk.push_back(line_input);
+		// store chunk line numbers
+		chunk_lines.push_back(line_num);
 	} 
 	
-	if (line_input.empty() || std::all_of(line_input.begin(), line_input.end(),isspace))
+	if (line_input.empty() || std::all_of(line_input.begin(), line_input.end(), isspace))
 	{
 		// store potential table values
 		std::vector<std::vector<std::string>> table;
@@ -169,34 +221,48 @@ void detect_tables(std::string line_input, std::vector<std::string> &chunk)
 		std::vector<std::vector<int>> origin;
 
 		// check whether it is a table
-		if (is_table(chunk, table, origin))
+		if (is_table(chunk, table, origin, chunk_lines))
 		{
+			// increment field number
+			field_num++;
 
 			// transpose tables
 			std::vector<std::vector<std::string>> colwise_table = transpose_table(table); 
 			std::vector<std::vector<int>> colwise_origin = transpose_table(origin); 
-			
-			// check
-			/* std::cout << "original: " << table.size() << '\n';
-			std::cout << "new: " << colwise.size() << '\n'; */
-			for (size_t i = 0; i < colwise_table.size(); i++)
+
+			// column names (hopefully in the first element of chunk)
+			std::vector<std::string> header = split_header(chunk[0], colwise_origin);
+			// in case the size does not match extend with empty strings
+			header.resize(colwise_table.size());
+		
+			for (size_t i = 0; i < colwise_origin.size(); i++)
 			{
+				std::cout << "Field: " << field_num << '\n';
+				
+				std::cout << "Line: ";
+				for (auto ll: chunk_lines)
+					std::cout << ll << " ";
+				std::cout << '\n';
+				
 				std::cout << "Char: ";
 				for (size_t j = 0; j < colwise_origin[i].size(); j++)
 					std::cout << " " << colwise_origin[i][j] << " ";
 				std::cout << '\n';
-				std::cout << "Variable: \n";
+
+				std::cout << "Variable: " << header[i] << '\n';
+				
 				std::cout << "Value: ";
 				for (size_t j = 0; j < colwise_table[i].size(); j++)
 					std::cout << " " << trim_str(colwise_table[i][j]) << " ";
 				std::cout << '\n';
+				std::cout << '\n';
 			}
 
-			std::cout << '\n';
+			// clean chunk line numbers
+			chunk_lines.clear();
 		}
 
 		/* std::cout << "<Empty line>\n"; */
-
 		// finally finish with a clean up
 		chunk.clear();
 	}

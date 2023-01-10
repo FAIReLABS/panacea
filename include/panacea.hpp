@@ -10,7 +10,8 @@
 #include <numeric>
 #include <iomanip> // quote strings
 #include <set> // variable list
-#include <algorithm> // for eg max  
+#include <algorithm> // for eg min element  
+
 
 //------------------------------
 // Function forward declarations
@@ -23,7 +24,7 @@ std::string detect_assign_operator(std::string st);
 void detect_numeric_vars(std::string st, std::string assign_operator, std::string user_input);
 
 // phase 3 - detecting tables
-void detect_tables(std::string line_input, std::vector<std::string> &chunk);
+void detect_tables(std::string line_input, std::vector<std::string> &chunk, int &field_num, int &line_num, std::vector<int> &chunk_lines);
 
 // helper functions
 std::string trim_str(std::string x);
