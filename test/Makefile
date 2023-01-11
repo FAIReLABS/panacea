@@ -1,26 +1,15 @@
-# objects to build test
-OBJS = $(addprefix $(BUILDDIR)/, $(patsubst %.cpp, %.o, $(notdir $(wildcard $(SRCDIR)/*.cpp))))
-TESTOBJS = $(addprefix $(BUILDDIR)/, $(patsubst %.cpp, %.o, $(notdir $(wildcard $(TESTDIR)/*.cpp))))
-
-# test executables
-ARCHIVENAME = $(BUILDDIR)/panacea.a
-TESTNAME = $(BUILDDIR)/test
-
-# linker flags for boost
-LDFLAGS += $(ARCHIVENAME) -lboost_unit_test_framework
-
 # archiving
-$(ARCHIVENAME): $(OBJS) FORCE
+$(ARCHIVENAME): $(OBJS) 
 	$(AR) $(ARFLAGS) $@ $^
 
 # build test
-$(TESTNAME): $(TESTOBJS) $(ARCHIVENAME) FORCE
+$(TESTNAME): $(TESTOBJS) $(ARCHIVENAME) 
 	$(CXX) -o $(TESTNAME) $^ $(LDFLAGS)
 
-$(BUILDDIR)/%.o:$(SRCDIR)/%.cpp | $(BUILDDIR) FORCE
+$(BUILDDIR)/%.o:$(SRCDIR)/%.cpp | $(BUILDDIR) 
 	$(COMPILE.cc) $< $(OUTPUT_OPTION)
 	$(COMPILE.cc) -MM -MP -MT $@ $< -o $(BUILDDIR)/$*.d
 
-$(BUILDDIR)/%.o:$(TESTDIR)/%.cpp | $(BUILDDIR) FORCE
+$(BUILDDIR)/%.o:$(TESTDIR)/%.cpp | $(BUILDDIR) 
 	$(COMPILE.cc) $< $(OUTPUT_OPTION)
 	$(COMPILE.cc) -MM -MP -MT $@ $< -o $(BUILDDIR)/$*.d

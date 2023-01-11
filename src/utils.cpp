@@ -43,37 +43,22 @@ void detect_units(std::string st, std::string &var, std::string &unit)
 }
 
 
-void print_regex(std::smatch hits, bool verbose, const int &charn, const int &field_num, const int &line_num)
+void print_regex(std::smatch hits, const int &charn, const int &field_num, const int &line_num)
 {
 	
-	if (verbose) 
-	{
-		// before regex match
-		std::cout << "Prefix: " << std::quoted(hits.prefix().str()) << '\n';
+	// detect units
+	std::string var;
+	std::string unit;
+	detect_units(hits, var, unit);
 	
-		// subgroups
-		for (size_t i = 0; i < hits.size(); ++i)
-			std::cout << i << ": " << std::quoted(hits[i].str()) << '\n';
+	std::cout << "Field: " << field_num << '\n';
+	std::cout << "Line: " << line_num << '\n';
+	std::cout << "Char: " << charn << '\n';
+	std::cout << "Variable: " << var << '\n';
+	std::cout << "Value: " << hits[3] << '\n';
+	std::cout << "Unit: " << unit << '\n';
+	std::cout << '\n';
 
-		// behind regex match
-		std::cout << "Suffix: " <<  std::quoted(hits.suffix().str()) << '\n';
-
-	} else {
-		
-		// detect units
-		std::string var;
-		std::string unit;
-		detect_units(hits, var, unit);
-		
-		std::cout << "Field: " << field_num << '\n';
-		std::cout << "Line: " << line_num << '\n';
-		std::cout << "Char: " << charn << '\n';
-		std::cout << "Variable: " << var << '\n';
-		std::cout << "Value: " << hits[3] << '\n';
-		std::cout << "Unit: " << unit << '\n';
-		std::cout << '\n';
-
-	}
 }
 
 // parse results column wise (works if inner vectors are of same size)

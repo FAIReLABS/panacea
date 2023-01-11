@@ -1,7 +1,7 @@
 #include "panacea.hpp"
 
-// row storage of  potential columns
-std::vector<int> parse_line(std::string line, std::vector<std::string> &row, 	std::vector<int> &pos)
+// rowwise storage of potential columns of table
+std::vector<int> parse_row(std::string line, std::vector<std::string> &row, std::vector<int> &pos)
 {
 
 	// storage containers
@@ -38,7 +38,8 @@ std::vector<int> parse_line(std::string line, std::vector<std::string> &row, 	st
 			pos.push_back(charn);
 		}
 
-		// when the original regex_search is false for the postfix then this remainder of the string must be nominal
+		// when the original regex_search is false for the postfix then this 
+		// remainder of the string must be nominal
 		line = hits[3].str() + hits.suffix().str();
 		std::smatch inner;
 		// return character position to start of loop with space character position after hit
@@ -52,8 +53,6 @@ std::vector<int> parse_line(std::string line, std::vector<std::string> &row, 	st
 			row.push_back(line);
 			pos.push_back(charn);
 		}
-
-
 
 		/* helper */
 		// print_regex(hits, true);
@@ -73,7 +72,7 @@ bool is_adjacent_chunk_lines(std::vector<int> &chunk_lines)
 	// drop first element for which no difference can be calculated
 	diff.erase(diff.begin());
 	// are all diferences 1 then lines are adjecent
-	bool adj = std::all_of(diff.begin(), diff.end(), [](int i){ return i == 1; });
+	bool adj = std::all_of(diff.begin(), diff.end(), [](int i){ return i == 1 || i == 2; });
 	
 	// clean chunk line numbers if not a table construct
 	if (!adj)
@@ -86,7 +85,7 @@ bool is_adjacent_chunk_lines(std::vector<int> &chunk_lines)
 }
 
 // detecting tables
-bool is_table(std::vector<std::string> &chunk, std::vector<std::vector<std::string>> &table, std::vector<std::vector<int>> &origin, std::vector<int> &chunk_lines) 
+bool is_table(std::vector<std::string> &chunk, std::vector<std::vector<std::string>> &table, std::vector<std::vector<int>> &origin, std::vector<int> &chunk_lines, const double &white) 
 {
 	// store relative counts characters
 	double rel_cnt;
@@ -106,7 +105,7 @@ bool is_table(std::vector<std::string> &chunk, std::vector<std::vector<std::stri
 		// store positions of values
 		std::vector<int> pos;
 		// store integer representation
-		std::vector<int> int_line = parse_line(i, row, pos);
+		std::vector<int> int_line = parse_row(i, row, pos);
 
 		// add rows to table
 		if (!row.empty())
@@ -166,7 +165,7 @@ bool is_table(std::vector<std::string> &chunk, std::vector<std::vector<std::stri
 	
 	/* std::cout << "Amount of characters relative to white space: " << std::fixed << rel_cnt << '\n'; */
 
-	bool out = (j == 0 && rel_cnt < 0.5 && chunk_lines.size() > 2 && is_adjacent_chunk_lines(chunk_lines)) ? true : false;
+	bool out = (j == 0 && rel_cnt < white && chunk_lines.size() > 2 && is_adjacent_chunk_lines(chunk_lines)) ? true : false;
 
 	/* std::cout << "Is this a table: " << out << '\n'; */
 	
@@ -188,7 +187,8 @@ std::vector<std::string> split_header(std::string header, std::vector<std::vecto
 
 	// extract column names based on positions
 	std::vector<std::string> out;
-	size_t i{1}; // second position
+	// second position
+	size_t i{ 1 }; 
 	std::string colname;
 	while ((colname = header.substr(0, pos[i] - pos[i - 1])) != "") 
 	{
@@ -201,10 +201,10 @@ std::vector<std::string> split_header(std::string header, std::vector<std::vecto
 }
 
 /* extract chunks of text that might be tables. Add assign operator to prevent false positives!!*/
-void detect_tables(std::string line_input, std::vector<std::string> &chunk, int &field_num, int &line_num, std::vector<int> &chunk_lines) 
+void detect_tables(std::string line_input, std::vector<std::string> &chunk, int &field_num, int &line_num, std::vector<int> &chunk_lines, const double &white) 
 {
 
-	// accumulate untile empty line then flush
+	// accumulate untile empty line(s) then flush
 	if (!(line_input.empty() || std::all_of(line_input.begin(), line_input.end(), isspace)))
 	{
 		// store chunk lines
@@ -213,15 +213,26 @@ void detect_tables(std::string line_input, std::vector<std::string> &chunk, int 
 		chunk_lines.push_back(line_num);
 	} 
 	
+	// count empty lines
+	int whiteline{0};
 	if (line_input.empty() || std::all_of(line_input.begin(), line_input.end(), isspace))
 	{
+		whiteline++;
+	}
+
+	// process and flush chunks
+	if (whiteline > 0 && whiteline < 3)
+	{
+		// flush whiteline
+		whiteline = 0;
+
 		// store potential table values
 		std::vector<std::vector<std::string>> table;
 		// store position of values
 		std::vector<std::vector<int>> origin;
 
 		// check whether it is a table
-		if (is_table(chunk, table, origin, chunk_lines))
+		if (is_table(chunk, table, origin, chunk_lines, white))
 		{
 			// increment field number
 			field_num++;
@@ -232,11 +243,15 @@ void detect_tables(std::string line_input, std::vector<std::string> &chunk, int 
 
 			// column names (hopefully in the first element of chunk)
 			std::vector<std::string> header = split_header(chunk[0], colwise_origin);
+			
 			// in case the size does not match extend with empty strings
 			header.resize(colwise_table.size());
+			
 			// extract units where possible
 			std::vector<std::string> vars(header.size());
 			std::vector<std::string> units(header.size());
+
+			// use original header vector to create two new vectors of units and variables respectively
 			for (std::string::size_type i = 0; i < header.size(); i++)
 				detect_units(header[i], vars[i], units[i]);
 		
@@ -276,4 +291,3 @@ void detect_tables(std::string line_input, std::vector<std::string> &chunk, int 
 	}
 
 }
-

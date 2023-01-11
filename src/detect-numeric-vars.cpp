@@ -58,10 +58,10 @@ std::regex regex_numeric_vars(std::string assign_operator, std::string user)
 
 }
 
-void detect_numeric_vars(std::string st, std::string assign_operator, std::string user_input, int &field_num, int &line_num)
+void detect_numeric_vars(std::string line_input, std::string assign_operator, int &field_num, int &line_num)
 {
 	// create regex
-	std::regex rg = regex_numeric_vars(assign_operator, user_input);
+	std::regex rg = regex_numeric_vars(assign_operator, ".");
 
 	// holds regex results
 	std::smatch hits;
@@ -69,7 +69,7 @@ void detect_numeric_vars(std::string st, std::string assign_operator, std::strin
 	// position of first character
 	int charn{1};
 
-	while (regex_search(st, hits, rg))
+	while (regex_search(line_input, hits, rg))
 	{
 
 		// for lines field numbers are not the same as line numbers as fields only record hits
@@ -79,13 +79,13 @@ void detect_numeric_vars(std::string st, std::string assign_operator, std::strin
 		charn +=  hits[1].length();
 
 		// print the triplet
-		print_regex(hits, false, charn, field_num, line_num);
+		print_regex(hits, charn, field_num, line_num);
 
 		// get end of triplet
 		charn += hits[0].length();
 	
 		// return suffix until no more text
-		st = hits.suffix();
+		line_input = hits.suffix();
 	}
 
 	/* return search_out; */

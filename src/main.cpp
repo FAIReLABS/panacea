@@ -1,10 +1,77 @@
+/*
+ * This file is part of panacea.
+ *
+ * Developed for FAIReLABS: Integrated lab solutions for an open science lab.
+ * 
+ * This product includes software developed by FAIReLABS
+ * (https://fairelabs.github.io/webpage/).
+ * 
+ * See the COPYRIGHT file at the top-level directory of this distribution
+ * for details of code ownership.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #include "panacea.hpp"
+
+// flags to main
+void main_args(int argc, char **argv, std::string &data, std::string &output, double &white){
+	
+	int i = 0;
+	
+	for (i = 1; i < argc; i++)
+	{
+		// uneven are flags
+		if (i % 2 == 0) 
+			continue;
+
+		if (strcmp(argv[i], "--data") == 0)
+		{
+			data = argv[i + 1]; // input file
+		}
+		else if (strcmp(argv[i], "--output") == 0)
+		{
+			output = argv[i + 1]; // output file
+		}
+		else if (strcmp(argv[i], "--white") == 0)
+		{
+			std::string str(argv[i + 1]); // whitespace sensitivity
+			white = std::stod(str);
+		}
+		else
+		{
+			std::cerr << "Unkown flag!\n";
+		}
+	}
+}	
 
 int main(int argc, char **argv)
 {
-	std::cout << argv[1] << std::endl;
+
+	std::cout << argv[2] << '\n';
+
+	// input
+	std::string data;
+	// output
+	std::string output;
+	// white space sensitivity
+	double white{ 0.7 };
+	// evaluate input
+	main_args(argc, argv, data, output, white);
+
 	// ifstream is used for reading files
-	std::ifstream inf{ argv[1] };
+	std::ifstream inf{ data.c_str() };
 
 	// If we couldn't open the output file stream for reading
 	if (!inf) 
@@ -15,13 +82,13 @@ int main(int argc, char **argv)
 	}
 
 	// let user assign variable name
-	std::string user_input{"."};
-	std::cout << "Enter variable:\n";
-	std::cin >> user_input;
+	std::string user_input{ "." };
+	/* std::cout << "Enter variable:\n";
+	std::cin >> user_input; */
 
 	// positions
-	int line_num{0}; // count line numbers 
-	int field_num{0}; // count chunk numbers
+	int line_num{ 0 }; // count line numbers 
+	int field_num{ 0 }; // count chunk numbers
 
 	// store line output as chunks
 	std::vector<std::string> chunk; 
@@ -46,13 +113,13 @@ int main(int argc, char **argv)
 		// phase 2 - if phase 1 true then extract assignement of numeric variables
 		if (!grep_date && !assign_operator.empty()) 
 		{
-			detect_numeric_vars(line_input, assign_operator, user_input, field_num, line_num);
+			detect_numeric_vars(line_input, assign_operator, field_num, line_num);
 		}
 
 		// phase 3 - otherwise check wether text might include tables
 		if (!grep_date && assign_operator.empty())
 		{
-			detect_tables(line_input, chunk, field_num, line_num, chunk_lines); 
+			detect_tables(line_input, chunk, field_num, line_num, chunk_lines, white); 
 		}
 
 	}

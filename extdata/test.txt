@@ -6,6 +6,10 @@ b     6     y     2         z
 c     7     z     3            
 d     8     z     4            
 
+x       y        z      
+42e-3   4.3e-02   4.4e-01
+42e-3   4.3e-02   4.4e-01
+
 Lorem ipsum dolor sit amet, 42 consectetur adipiscing elit, sed do eiusmod 42 tempor incididunt ut 
 labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
 nisi 42 ut aliquip ex ea commodo consequat. Duis aute irure dolor 42 in reprehenderit in voluptate 

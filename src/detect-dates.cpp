@@ -1,6 +1,6 @@
 #include "panacea.hpp"
 
-bool detect_dates(std::string st, int &field_num, int &line_num)
+bool detect_dates(std::string line_input, int &field_num, int &line_num)
 {
 	// create regex
 	std::regex rg("^(.*)" + std::string(dat) + "(\\t|\\n|\\r|\\v|\\f|\\s*$)");
@@ -12,7 +12,7 @@ bool detect_dates(std::string st, int &field_num, int &line_num)
 	int charn{1};
 	bool is_date;
 
-	is_date = regex_search(st, hits, rg);
+	is_date = regex_search(line_input, hits, rg);
 	
 	// for lines field numbers are not the same as line numbers as fields only record hits
 	if (is_date)
