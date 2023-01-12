@@ -1,14 +1,18 @@
 		19.01.18 09:35
 
+
+table 1:
 foo   bar   baz   qux (s)   quz
 a     5     x     1         x  
 b     6     y     2         z  
 c     7     z     3            
 d     8     z     4            
 
-x       y        z      
+
+x       y         z      
 42e-3   4.3e-02   4.4e-01
 42e-3   4.3e-02   4.4e-01
+
 
 Lorem ipsum dolor sit amet, 42 consectetur adipiscing elit, sed do eiusmod 42 tempor incididunt ut 
 labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
@@ -30,3 +34,7 @@ Lorem Ipsum (numeric) : 42 /
 Lorem Ipsum (numeric) : 42 )
 
 compounded nominal   : x=foo y=bar z=bar  baz 
+
+compounded nominal1   : x=foo y=bar z=bar  baz 
+compounded nominal2   : x=foo y=bar z=bar  baz 
+compounded nominal3  : x=foo y=bar z=bar  baz 

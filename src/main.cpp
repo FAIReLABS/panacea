@@ -89,6 +89,7 @@ int main(int argc, char **argv)
 	// positions
 	int line_num{ 0 }; // count line numbers 
 	int field_num{ 0 }; // count chunk numbers
+	int white_lines{ 0 }; // count white lines
 
 	// store line output as chunks
 	std::vector<std::string> chunk; 
@@ -119,7 +120,7 @@ int main(int argc, char **argv)
 		// phase 3 - otherwise check wether text might include tables
 		if (!grep_date && assign_operator.empty())
 		{
-			detect_tables(line_input, chunk, field_num, line_num, chunk_lines, white); 
+			detect_tables(line_input, chunk, field_num, line_num, chunk_lines, white, white_lines); 
 		}
 
 	}

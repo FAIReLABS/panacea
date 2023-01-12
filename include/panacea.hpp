@@ -23,6 +23,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/** @file panacea.hpp
+ * @brief Global variables and functions of panacea. 
+ * 
+ */
+
 #ifndef PANACEA_HPP
 #define PANACEA_HPP
 
@@ -111,7 +116,7 @@ void detect_numeric_vars(std::string line_input, std::string assign_operator, in
  * 	that yielded the result of the chunk (accumulative count in the respective chunk).
  * @param white relative abundance of white space (defaults to double of 0.7).
  */
-void detect_tables(std::string line_input, std::vector<std::string> &chunk, int &field_num, int &line_num, std::vector<int> &chunk_lines, const double &white);
+void detect_tables(std::string line_input, std::vector<std::string> &chunk, int &field_num, int &line_num, std::vector<int> &chunk_lines, const double &white, int &white_lines);
 
 /**
  * @brief Detecting units
@@ -148,6 +153,33 @@ void detect_units(std::string hits, std::string &var, std::string &unit);
  * @return string container exclusive trailing and preceding white spaces.
  */
 std::string trim_str(std::string x);
+
+/**
+ * @brief Calculate median of vector container.
+ * 
+ *
+ * @param x a vector container of type double. 
+ * @return a double precision value.
+ */
+double median(std::vector<int> x);
+
+/**
+ * @brief Calculate median of vector container.
+ * 
+ * @overload
+ * @param x a vector container of type double. 
+ * @return a double precision value.
+ */
+double median(std::vector<double> x);
+ 
+/**
+ * @brief Calculate the median deviation.
+ * 
+ *
+ * @param x a vector container of type double.
+ * @return  a double precision value.
+ */
+double mad(std::vector<int> x);
 
 /**
  * @brief print the results of a regex match.

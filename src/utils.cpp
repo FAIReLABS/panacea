@@ -117,3 +117,48 @@ int cnt_chars(std::string st)
 	// returning number of spaces
 	return (count);
 }
+
+// Calculate median of vector container.
+double median(std::vector<int> x)
+{
+	// if length one then shortcut
+	if (x.size() == 1)
+		return static_cast<double>(x[0]);
+
+	// sort vector
+	std::sort(x.begin(), x.end());
+
+	// calculate median
+	double median = (x[x.size() / 2] + x[(x.size() / 2) - 1]) / 2;
+	return median;
+}
+double median(std::vector<double> x)
+{
+	// if length one then shortcut
+	if (x.size() == 1)
+		return x[0];
+
+	// sort vector
+	std::sort(x.begin(), x.end());
+
+	// calculate median
+	double median = (x[x.size() / 2] + x[(x.size() / 2) - 1]) / 2;
+	return median;
+}
+ 
+// Calculate the median deviation.
+double mad(std::vector<int> x)
+{
+
+	// if length one then shortcut
+	if (x.size() == 1)
+		return static_cast<double>(x[0]);
+
+	std::vector<double> mad;
+	double med = median(x);
+	for (const auto &i: x)
+	{
+		mad.push_back(abs(i - med));
+	}
+	return median(mad);
+}

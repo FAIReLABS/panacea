@@ -1,6 +1,7 @@
 # documentation
 latex/
 html/
+man/
 # no builds
 bin/
 # EDI 
@@ -9,3 +10,5 @@ bin/
 extdata/2018-01-19-GLENDON/
 # non-package functions
 spike/
+# generated doxyfile
+Doxyfile
