@@ -1,6 +1,7 @@
 #include "panacea.hpp"
 
-bool detect_dates(std::string line_input, int &field_num, int &line_num)
+bool detect_dates(std::string line_input, int &field_num, int &line_num, 
+	panacea &out)
 {
 	// create regex
 	std::regex rg("^(.*)" + std::string(dat) + "(\\t|\\n|\\r|\\v|\\f|\\s*$)");
@@ -21,11 +22,7 @@ bool detect_dates(std::string line_input, int &field_num, int &line_num)
 		charn +=  hits[1].length(); // get start of triplet
 
 		// print the date
-		std::cout << "Field: " << field_num << '\n';
-		std::cout << "Line: " << line_num << '\n';
-		std::cout << "Char: " << charn << '\n';
-		std::cout << "Date: " << hits[2] << '\n';
-		std::cout << '\n';
+		out.update(hits[2].str(), "date");
 	}
 
 	return is_date;

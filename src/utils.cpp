@@ -1,13 +1,5 @@
 #include "panacea.hpp"
 
-/* Trim the white spaces from both ends of results */
-std::string trim_str(std::string x)
-{
-	std::regex white_reg("^[ |\\t|\\n|\\r|\\v|\\f]*|[ |\\t|\\n|\\r|\\v|\\f]*$");
-	x = std::regex_replace(x, white_reg, "");
-	return x;
-}
-
 // filter units within variable names
 void detect_units(std::match_results<std::string::const_iterator> st, std::string &var, std::string &unit)
 {
@@ -40,25 +32,6 @@ void detect_units(std::string st, std::string &var, std::string &unit)
 		unit = hits_unit[2].str();
 		var.erase(var.find(hits_unit[1].str()), hits_unit[1].str().size());
 	} 
-}
-
-
-void print_regex(std::smatch hits, const int &charn, const int &field_num, const int &line_num)
-{
-	
-	// detect units
-	std::string var;
-	std::string unit;
-	detect_units(hits, var, unit);
-	
-	std::cout << "Field: " << field_num << '\n';
-	std::cout << "Line: " << line_num << '\n';
-	std::cout << "Char: " << charn << '\n';
-	std::cout << "Variable: " << var << '\n';
-	std::cout << "Value: " << hits[3] << '\n';
-	std::cout << "Unit: " << unit << '\n';
-	std::cout << '\n';
-
 }
 
 // parse results column wise (works if inner vectors are of same size)

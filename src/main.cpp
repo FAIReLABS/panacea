@@ -95,6 +95,8 @@ int main(int argc, char **argv)
 	std::vector<std::string> chunk; 
 	// intermediate storage of lines for chunks
 	std::vector<int> chunk_lines; 
+	// results
+	panacea results;
 
 	while (inf) 
 	{
@@ -106,7 +108,7 @@ int main(int argc, char **argv)
 		line_num++; 
 
 		// phase 0 - detect dates
-		bool grep_date = detect_dates(line_input, field_num, line_num);
+		bool grep_date = detect_dates(line_input, field_num, line_num, results);
 
 		// phase 1 - detect assignment operator
 		std::string assign_operator = detect_assign_operator(line_input);
@@ -114,16 +116,19 @@ int main(int argc, char **argv)
 		// phase 2 - if phase 1 true then extract assignement of numeric variables
 		if (!grep_date && !assign_operator.empty()) 
 		{
-			detect_numeric_vars(line_input, assign_operator, field_num, line_num);
+			detect_numeric_vars(line_input, assign_operator, field_num, line_num, results);
 		}
 
 		// phase 3 - otherwise check wether text might include tables
 		if (!grep_date && assign_operator.empty())
 		{
-			detect_tables(line_input, chunk, field_num, line_num, chunk_lines, white, white_lines); 
+			detect_tables(line_input, chunk, field_num, line_num, chunk_lines, white, white_lines, results); 
 		}
 
 	}
+
+	// print
+	print(std::cout, results);
 
 	// phase 4 - use results of phase 2 as gold labels to detect nominal variable value pairs
 

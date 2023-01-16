@@ -43,6 +43,126 @@
 #include <algorithm> // for eg min element  
 #include <list>
 
+
+/**
+ * @brief Aggregate class for variable, value, unit triplets
+ * 
+ */
+struct triplet
+{
+	// triplets
+	std::string var; 
+	std::string unit;
+	std::vector<std::string> val; // can be multiple
+};
+
+/**
+ * @brief Aggregate class for location of triplets
+ * 
+ */
+struct locator
+{
+	// location
+	int field;
+	std::vector<int> line; // can be multiple
+	std::vector<int> charn; // can be multiple
+};
+
+/**
+ * @brief Implementation of panacea data integration
+ *
+ * Integration is controlled on a per triplet basis; variable, value, and unit. 
+ * Triplets are accompanied by a set of locator coordinates which allow 
+ * reconstructing relative positions of the triplets within the original file.
+ */
+class panacea
+{
+	// typedefs
+	typedef std::string cell; /**< a single entity of the triplet. */ 
+	typedef std::vector<std::string> column; /**< a series of entities of a triplet. */ 
+	typedef std::vector<std::vector<std::string>> table; /**< a matrix of entities of a set of triplets. */
+	typedef std::vector<int> range; /**< a range of coordinates of a triplet */
+	typedef std::vector<std::vector<int>> ident; /**< a matrix of coordinates referring to a table */
+
+	// friend functions
+	friend std::ostream &print(std::ostream &os, const panacea &dat);
+
+public:
+
+	//--------------------------------------------------------------------------
+	// constructors
+	//--------------------------------------------------------------------------
+	/**
+	 * @brief Construct a new panacea object
+	 * 
+	 * Panacea objects can be constructed from individual entities (variable,
+	 * unit, value) and their coordinates (field number, line number and 
+	 * position of first character). Alternatively, columns or whole tables can 
+	 * be supplied.
+	 */
+	panacea() = default;
+	// table wise initialize
+	panacea(column var, column unit, table val, int field, range line, ident charn)
+	{
+		for (size_t i = 0; i < val.size(); i++)
+			trip.push_back(triplet{var[i], unit[i], val[i]});
+		
+		for (size_t i = 0; i < charn.size(); i++)
+			loc.push_back(locator{field, line, charn[i]});
+
+	};
+	// column wise initialize
+	panacea(cell var, cell unit, column val, int field, range line, range charn) :
+			trip(1, triplet{ var, unit, val  }), 
+			loc(1, locator{ field, line, charn  })
+	{};
+	// cell wise initialize
+	panacea(cell var, cell unit, cell val, int field, int line, int charn) :
+			trip(1, triplet{ var, unit, column{ val } }), 
+			loc(1, locator{ field, range{ line }, range{ charn }})
+	{};
+	// date wise initialize
+	panacea(cell datum) : date(datum) {};
+
+	//--------------------------------------------------------------------------
+	// member operations
+	//--------------------------------------------------------------------------
+	/**
+	 * @brief Combine to panacea objects
+	 * 
+	 * @return panacea& 
+	 */
+	panacea &combine(const panacea&);
+	/**
+	 * @brief Update a data member
+	 * 
+	 * @param x The content of an entity to be replaced.
+	 * @param mem The data member on which to perform the operation.
+	 * @return panacea& 
+	 */
+	panacea &update(cell x, std::string mem);
+
+private:
+
+	//--------------------------------------------------------------------------
+	// data members
+	//--------------------------------------------------------------------------
+
+	cell date;
+	std::vector<triplet> trip;
+	std::vector<locator> loc;
+
+};
+
+/**
+ * @brief Print panacea objects.
+ * 
+ * @param os Ostream object reference.
+ * @param dat Reference to panacea object to be printed.
+ * @return std::ostream& 
+ */
+std::ostream &print(std::ostream &os, const panacea &dat);
+
 /**
  * @brief Detecting dates in a text file.
  *
@@ -58,7 +178,8 @@
  * @htmlinclude
  * @return boolean true if date detected, otherwise returns false.
  */
-bool detect_dates(std::string line_input, int &field_num, int &line_num);
+bool detect_dates(std::string line_input, int &field_num, int &line_num, 
+	panacea &out);
 
 /**
  * @brief Detecting assignement operators in a text file.
@@ -93,7 +214,8 @@ std::string detect_assign_operator(std::string line_input);
  * @param line_num reference to integer value of the line number that yielded 
  * 	the result (accumulative count in the respective document).
  */
-void detect_numeric_vars(std::string line_input, std::string assign_operator, int &field_num, int &line_num);
+void detect_numeric_vars(std::string line_input, std::string assign_operator, 
+	int &field_num, int &line_num, panacea &out);
 
 /**
  * @brief Detecting tables in the file.
@@ -116,7 +238,9 @@ void detect_numeric_vars(std::string line_input, std::string assign_operator, in
  * 	that yielded the result of the chunk (accumulative count in the respective chunk).
  * @param white relative abundance of white space (defaults to double of 0.7).
  */
-void detect_tables(std::string line_input, std::vector<std::string> &chunk, int &field_num, int &line_num, std::vector<int> &chunk_lines, const double &white, int &white_lines);
+void detect_tables(std::string line_input, std::vector<std::string> &chunk, 
+	int &field_num, int &line_num, std::vector<int> &chunk_lines, 
+	const double &white, int &white_lines, panacea &out);
 
 /**
  * @brief Detecting units
@@ -152,7 +276,12 @@ void detect_units(std::string hits, std::string &var, std::string &unit);
  * @param x string container
  * @return string container exclusive trailing and preceding white spaces.
  */
-std::string trim_str(std::string x);
+inline std::string trim_str(std::string x)
+{
+	std::regex white_reg("^[ |\\t|\\n|\\r|\\v|\\f]*|[ |\\t|\\n|\\r|\\v|\\f]*$");
+	x = std::regex_replace(x, white_reg, "");
+	return x;
+}
 
 /**
  * @brief Calculate median of vector container.
@@ -182,19 +311,6 @@ double median(std::vector<double> x);
 double mad(std::vector<int> x);
 
 /**
- * @brief print the results of a regex match.
- * 
- *
- * @param hits smatch type result of regex search. 
- * @param charn reference to character number counting from the beginning of the line.
- * @param field_num reference to integer value of the text field that yielded 
- * 	the result (accumulative count in the respective document).
- * @param line_num reference to integer value of the line number that yielded 
- * 	the result (accumulative count in the respective document).
- */
-void print_regex(std::smatch hits, const int &charn, const int &field_num, const int &line_num);
-
-/**
  * @brief transpose a table of strings.
  * 
  * Tranposing a table (effectively a matrix).
@@ -213,6 +329,7 @@ std::vector<std::vector<std::string>> transpose_table(std::vector<std::vector<st
  * @return a vector container with vector containers of type integer.
  */
 std::vector<std::vector<int>> transpose_table(std::vector<std::vector<int>> table);
+
 
 /**
  * @brief Count characters.

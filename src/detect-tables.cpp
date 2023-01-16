@@ -1,7 +1,8 @@
 #include "panacea.hpp"
 
 // rowwise storage of potential columns of table
-std::vector<int> parse_row(std::string line, std::vector<std::string> &row, std::vector<int> &pos)
+std::vector<int> parse_row(std::string line, std::vector<std::string> &row, 
+	std::vector<int> &pos)
 {
 
 	// storage containers
@@ -42,7 +43,8 @@ std::vector<int> parse_row(std::string line, std::vector<std::string> &row, std:
 		// remainder of the string must be nominal
 		line = hits[3].str() + hits.suffix().str();
 		std::smatch inner;
-		// return character position to start of loop with space character position after hit
+		// return character position to start of loop with space character 
+		// position after hit
 		charn += hits[2].length() + hits[3].length();
 		// remainder of suffix length when removing spaces in front
 		rem = hits[3].length();
@@ -72,7 +74,11 @@ bool is_adjacent_chunk_lines(std::vector<int> &chunk_lines)
 	// drop first element for which no difference can be calculated
 	diff.erase(diff.begin());
 	// are all diferences 1 then lines are adjecent
-	bool adj = std::all_of(diff.begin(), diff.end(), [](int i){ return i == 1 || i == 2; });
+	bool adj = std::all_of(
+		diff.begin(), 
+		diff.end(), 
+		[](int i){ return i == 1 || i == 2; }
+	);
 	
 	// clean chunk line numbers if not a table construct
 	if (!adj)
@@ -146,7 +152,11 @@ bool is_table(
 	{ 
 		// take all values more than 0 of the integer representation
 		int_add.erase(
-			std::remove_if(int_add.begin(), int_add.end(),[](const int& x) {return x == 0;}), 
+			std::remove_if(
+				int_add.begin(), 
+				int_add.end(),
+				[](const int& x) {return x == 0;}
+			), 
 			int_add.end()
 		);
 
@@ -178,7 +188,8 @@ bool is_table(
 	return out;
 }
 
-std::vector<std::string> split_header(std::string header, std::vector<std::vector<int>> origin)
+std::vector<std::string> split_header(std::string header, 
+	std::vector<std::vector<int>> origin)
 {
 	// position of column names
 	std::vector<size_t> pos;
@@ -206,18 +217,31 @@ std::vector<std::string> split_header(std::string header, std::vector<std::vecto
 	return out;
 }
 
-/* extract chunks of text that might be tables. Add assign operator to prevent false positives!!*/
-void detect_tables(std::string line_input, std::vector<std::string> &chunk, int &field_num, int &line_num, std::vector<int> &chunk_lines, const double &white, int &white_lines) 
+// extract chunks of text that might be tables.
+void detect_tables(
+	std::string line_input, 
+	std::vector<std::string> &chunk, 
+	int &field_num, 
+	int &line_num, 
+	std::vector<int> &chunk_lines, 
+	const double &white, 
+	int &white_lines,
+	panacea &out
+) 
 {
 
+	// is it an white line?
+	bool is_white_line = line_input.empty() || 
+		std::all_of(line_input.begin(), line_input.end(), isspace);
+
 	// count coonsecutive empty lines
-	if (line_input.empty() || std::all_of(line_input.begin(), line_input.end(), isspace))
+	if (is_white_line)
 	{
 		white_lines++;
 	}
 
 	// accumulate until n empty line(s)
-	if (white_lines < 2 && !(line_input.empty() || std::all_of(line_input.begin(), line_input.end(), isspace)))
+	if (white_lines < 2 && !is_white_line)
 	{
 		// flush whiteline counter
 		white_lines = 0;
@@ -247,49 +271,29 @@ void detect_tables(std::string line_input, std::vector<std::string> &chunk, int 
 			field_num++;
 
 			// transpose tables
-			std::vector<std::vector<std::string>> colwise_table = transpose_table(table); 
-			std::vector<std::vector<int>> colwise_origin = transpose_table(origin); 
+			std::vector<std::vector<std::string>> col_table = transpose_table(table); 
+			std::vector<std::vector<int>> col_origin = transpose_table(origin); 
 
-			// column names (hopefully in the first element of chunk)
-			int h = chunk_lines.size() - table_lines.size(); // first value position
-			std::vector<std::string> header = split_header(chunk[h], colwise_origin);
+			// locate column names in chunk
+			int h = chunk_lines.size() - table_lines.size(); 
+			std::vector<std::string> header = split_header(chunk[h], col_origin);
 			
 			// in case the size does not match extend with empty strings
-			header.resize(colwise_table.size());
+			header.resize(col_table.size());
 			
-			// extract units where possible
+			// use original header vector to create two new vectors of units and 
+			// variables respectively
 			std::vector<std::string> vars(header.size());
 			std::vector<std::string> units(header.size());
 
-			// use original header vector to create two new vectors of units and variables respectively
+			// extract units where possible
 			for (std::string::size_type i = 0; i < header.size(); i++)
 				detect_units(header[i], vars[i], units[i]);
 		
-			for (size_t i = 0; i < colwise_origin.size(); i++)
-			{
-				std::cout << "Field: " << field_num << '\n';
-				
-				std::cout << "Line: ";
-				for (auto ll: table_lines)
-					std::cout << ll << " ";
-				std::cout << '\n';
-				
-				std::cout << "Char: ";
-				for (size_t j = 0; j < colwise_origin[i].size(); j++)
-					std::cout << " " << colwise_origin[i][j] << " ";
-				std::cout << '\n';
-
-				std::cout << "Variable: " << vars[i] << '\n';
-				
-				std::cout << "Value: ";
-				for (size_t j = 0; j < colwise_table[i].size(); j++)
-					std::cout << " " << trim_str(colwise_table[i][j]) << " ";
-				std::cout << '\n';
-
-				std::cout << "Unit: " << units[i] << '\n';
-
-				std::cout << '\n';
-			}			
+			// print the triplet
+			//print_regex(vars, col_table, units, field_num, table_lines, col_origin);
+			out.combine(panacea{ vars, units, col_table, field_num, table_lines, col_origin });
+		
 		}
 
 		// finally finish with a clean up
