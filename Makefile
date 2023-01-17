@@ -21,7 +21,7 @@ prefix = /usr/local
 # https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html
 
 # compiler vars
-CXXFLAGS += $(INCDIRS:%=-I%) -std=c++1y
+CXXFLAGS += $(INCDIRS:%=-I%) -std=c++1y 
 # linker flags for boost
 LDFLAGS += $(ARCHIVENAME) -lboost_unit_test_framework
 

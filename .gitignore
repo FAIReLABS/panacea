@@ -12,3 +12,4 @@ extdata/2018-01-19-GLENDON/
 spike/
 # generated doxyfile
 Doxyfile
+include/nlohmann

@@ -53,7 +53,7 @@ std::regex regex_numeric_vars(std::string assign_operator, std::string user)
 	/* std::cout <<  begin + var + assign_operator + num + unit + end << '\n'; */
 
 	// cast to regex type and return
-	std::string st =  begin + var + assign_operator + num + unit + end ;
+	std::string st =  begin + var + assign_operator + num_rg + unit_rg + end ;
 	return std::regex(st.c_str());
 
 }

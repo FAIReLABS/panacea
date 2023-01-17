@@ -26,7 +26,8 @@
 #include "panacea.hpp"
 
 // flags to main
-void main_args(int argc, char **argv, std::string &data, std::string &output, double &white){
+void main_args(int argc, char **argv, std::string &data, std::string &output, 
+	double &white, int verbose){
 	
 	int i = 0;
 	
@@ -49,6 +50,11 @@ void main_args(int argc, char **argv, std::string &data, std::string &output, do
 			std::string str(argv[i + 1]); // whitespace sensitivity
 			white = std::stod(str);
 		}
+		else if (strcmp(argv[i], "--verbose") == 0)
+		{
+			std::string str(argv[i + 1]); // verbosity
+			white = std::stoi(str);
+		}
 		else
 		{
 			std::cerr << "Unkown flag!\n";
@@ -59,16 +65,17 @@ void main_args(int argc, char **argv, std::string &data, std::string &output, do
 int main(int argc, char **argv)
 {
 
-	std::cout << argv[2] << '\n';
-
-	// input
-	std::string data;
-	// output
-	std::string output;
+	// input/output
+	std::string data, output;
 	// white space sensitivity
 	double white{ 0.7 };
+	// white space sensitivity
+	int verbose{ 0 };
 	// evaluate input
-	main_args(argc, argv, data, output, white);
+	main_args(argc, argv, data, output, white, verbose);
+
+	if (verbose)
+		std::cout << "Input file: " << data << '\n';
 
 	// ifstream is used for reading files
 	std::ifstream inf{ data.c_str() };
@@ -80,11 +87,6 @@ int main(int argc, char **argv)
 		std::cerr << "Could not be opened for reading!\n";
 		return 1;
 	}
-
-	// let user assign variable name
-	std::string user_input{ "." };
-	/* std::cout << "Enter variable:\n";
-	std::cin >> user_input; */
 
 	// positions
 	int line_num{ 0 }; // count line numbers 
@@ -128,7 +130,13 @@ int main(int argc, char **argv)
 	}
 
 	// print
-	print(std::cout, results);
+	if (verbose)
+		print(std::cout, results);
+
+	// write prettified JSON to another file
+	nlohmann::ordered_json j = parse(results);
+	std::ofstream ouf { output.c_str() };
+	ouf << std::setw(4) << j << std::endl;
 
 	// phase 4 - use results of phase 2 as gold labels to detect nominal variable value pairs
 

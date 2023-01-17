@@ -10,11 +10,11 @@ std::vector<int> parse_row(std::string line, std::vector<std::string> &row,
 	std::vector<int> out; // integers for determening whether this could be a table
 	
 	// position of char
-	int charn{1};
-	int rem{0};
+	int charn{ 1 };
+	int rem{ 0 };
 
 	// make regex (include spaces before and behind to enable character position counts)
-	std::string rgnum = "(\\s+|^)" + std::string(num) + "(\\s+|$)";
+	std::string rgnum = "(\\s+|^)" + std::string(num_rg) + "(\\s+|$)";
 	std::regex rg(rgnum.c_str());
 
 	// decompose potential tables

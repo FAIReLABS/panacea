@@ -4,7 +4,7 @@ bool detect_dates(std::string line_input, int &field_num, int &line_num,
 	panacea &out)
 {
 	// create regex
-	std::regex rg("^(.*)" + std::string(dat) + "(\\t|\\n|\\r|\\v|\\f|\\s*$)");
+	std::regex rg("^(.*)" + std::string(date_rg) + "(\\t|\\n|\\r|\\v|\\f|\\s*$)");
 
 	// holds regex results
 	std::smatch hits;

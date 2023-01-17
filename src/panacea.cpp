@@ -13,6 +13,8 @@ panacea &panacea::combine(const panacea &rhs)
 {
 	// combine triplets
 	trip.insert(trip.end(), rhs.trip.begin(), rhs.trip.end());
+	// combine locator
+	loc.insert(loc.end(), rhs.loc.begin(), rhs.loc.end());
 	return *this;
 }
 
@@ -20,7 +22,7 @@ panacea &panacea::combine(const panacea &rhs)
 std::ostream &print(std::ostream& os, const panacea &dat)
 {
 	
-	os << dat.date << '\n';
+	// os << dat.date << '\n';
 	os << '\n';
 
 	for (const auto &i: dat.trip)
@@ -35,4 +37,37 @@ std::ostream &print(std::ostream& os, const panacea &dat)
 	}
 	
 	return os;
+}
+
+nlohmann::ordered_json parse(const panacea &dat)
+{
+	nlohmann::ordered_json k;
+	for(size_t i = 0; i < dat.loc.size(); ++i)
+	{ 
+		// intialize storage vector
+		nlohmann::ordered_json j;
+
+		j["Variable"] = dat.trip[i].var;
+
+		// can be multiple
+		nlohmann::json l_vec = dat.trip[i].val;
+		j["Value"] = l_vec;
+
+		j["Unit"] = dat.trip[i].unit;
+
+		j["Text field"] = dat.loc[i].field;
+
+		// can be multiple
+		nlohmann::json m_vec = dat.loc[i].line;
+		j["Line number"] = m_vec;
+
+		// can be multiple
+		nlohmann::json j_vec = dat.loc[i].charn;
+		j["Character number"] = j_vec;
+
+		// store rowwise json
+		k.push_back(j);
+	}
+
+	return k;
 }

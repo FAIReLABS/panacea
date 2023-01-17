@@ -31,42 +31,14 @@
 #ifndef PANACEA_HPP
 #define PANACEA_HPP
 
-#include <iostream>
+#include <iostream> // i/o streaming
 #include <fstream> // file reading
 #include <string> // strings
 #include <regex> // regular expressions
 #include <vector> // vectors
-#include <iterator>
-#include <numeric>
-#include <iomanip> // quote strings
-#include <set> // variable list
-#include <algorithm> // for eg min element  
-#include <list>
-
-
-/**
- * @brief Aggregate class for variable, value, unit triplets
- * 
- */
-struct triplet
-{
-	// triplets
-	std::string var; 
-	std::string unit;
-	std::vector<std::string> val; // can be multiple
-};
-
-/**
- * @brief Aggregate class for location of triplets
- * 
- */
-struct locator
-{
-	// location
-	int field;
-	std::vector<int> line; // can be multiple
-	std::vector<int> charn; // can be multiple
-};
+#include <set> // ordered punctuation
+#include <algorithm> // for e.g. min element  
+#include <nlohmann/json.hpp>// json parsing
 
 /**
  * @brief Implementation of panacea data integration
@@ -86,6 +58,7 @@ class panacea
 
 	// friend functions
 	friend std::ostream &print(std::ostream &os, const panacea &dat);
+	friend nlohmann::ordered_json parse(const panacea &dat);
 
 public:
 
@@ -105,10 +78,10 @@ public:
 	panacea(column var, column unit, table val, int field, range line, ident charn)
 	{
 		for (size_t i = 0; i < val.size(); i++)
-			trip.push_back(triplet{var[i], unit[i], val[i]});
+			trip.push_back(triplet{ var[i], unit[i], val[i] });
 		
 		for (size_t i = 0; i < charn.size(); i++)
-			loc.push_back(locator{field, line, charn[i]});
+			loc.push_back(locator{ field, line, charn[i] });
 
 	};
 	// column wise initialize
@@ -119,7 +92,7 @@ public:
 	// cell wise initialize
 	panacea(cell var, cell unit, cell val, int field, int line, int charn) :
 			trip(1, triplet{ var, unit, column{ val } }), 
-			loc(1, locator{ field, range{ line }, range{ charn }})
+			loc(1, locator{ field, range{ line }, range{ charn } })
 	{};
 	// date wise initialize
 	panacea(cell datum) : date(datum) {};
@@ -128,7 +101,7 @@ public:
 	// member operations
 	//--------------------------------------------------------------------------
 	/**
-	 * @brief Combine to panacea objects
+	 * @brief Combine two panacea objects
 	 * 
 	 * @return panacea& 
 	 */
@@ -143,6 +116,30 @@ public:
 	panacea &update(cell x, std::string mem);
 
 private:
+
+	/**
+	 * @brief Aggregate class for variable, value, unit triplets
+	 * 
+	 */
+	struct triplet
+	{
+		// triplets
+		cell var; 
+		cell unit;
+		column val; // can be multiple
+	};
+
+	/**
+	 * @brief Aggregate class for location of triplets
+	 * 
+	 */
+	struct locator
+	{
+		// location
+		int field{ 0 };
+		range line{ 0 }; // can be multiple
+		range charn{ 0 }; // can be multiple
+	};
 
 	//--------------------------------------------------------------------------
 	// data members
@@ -162,6 +159,14 @@ private:
  * @return std::ostream& 
  */
 std::ostream &print(std::ostream &os, const panacea &dat);
+
+/**
+ * @brief Parse panacea to JSON
+ * 
+ * @param dat 
+ * @return nlohmann::ordered_json 
+ */
+nlohmann::ordered_json parse(const panacea &dat);
 
 /**
  * @brief Detecting dates in a text file.
@@ -344,7 +349,7 @@ int cnt_chars(std::string st);
  * @brief Regex dates.
  * 
  */
-constexpr char dat[] =  "((0[1-9]|[12][0-9]|3[01])[- \\/\\.](0[1-9]|1[012])[- \\/\\.](19|20)?\\d\\d(\\s+(0[1-9]|1[0-9]|2[0-4]):[0-5][0-9])?)";
+constexpr char date_rg[] =  "((0[1-9]|[12][0-9]|3[01])[- \\/\\.](0[1-9]|1[012])[- \\/\\.](19|20)?\\d\\d(\\s+(0[1-9]|1[0-9]|2[0-4]):[0-5][0-9])?)";
 
 /**	
  * @brief Regex numeric values.
@@ -353,12 +358,12 @@ constexpr char dat[] =  "((0[1-9]|[12][0-9]|3[01])[- \\/\\.](0[1-9]|1[012])[- \\
  * float (e.g. -42.42) = [-+]?[0-9]+\\.[0-9]+
  * scientific (e.g. -42.42e-42) = [-+]?[0-9]+(?:\\.[0-9]+)?[eE][-+]?[0-9]+
  */ 
-constexpr char num[] = "([-+]?[0-9]+|[-+]?[0-9]+\\.[0-9]+|[-+]?[0-9]+(?:\\.[0-9]+)?[eE][-+]?[0-9]+)";
+constexpr char num_rg[] = "([-+]?[0-9]+|[-+]?[0-9]+\\.[0-9]+|[-+]?[0-9]+(?:\\.[0-9]+)?[eE][-+]?[0-9]+)";
 
 /**
  * @brief Regex units.
  * 
  */
-constexpr char unit[] = "(?:\\s*\\(?\\s*([a-zA-Z%]+[-]?[0-9]?)\\s*\\)?)?"; ;
+constexpr char unit_rg[] = "(?:\\s*\\(?\\s*([a-zA-Z%]+[-]?[0-9]?)\\s*\\)?)?"; ;
 
 #endif
