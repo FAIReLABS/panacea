@@ -90,7 +90,7 @@ Basic usage</h1>
 <ul>
 <li><code>--data</code>: for the input text file (e.g. <code>test.txt</code>).</li>
 <li><code>--output</code>: for the output JSON file (e.g. <code>test.json</code>)</li>
-<li><code>--white</code>: the relative white level (a value in between 0 to 1) to detect tables (defaults to 0.7)</li>
+<li><code>--white</code>: the relative white level (a value in between 0 and 1) to detect tables (defaults to 0.7)</li>
 <li><code>--verbose</code>: whether input filename and output results should be streamed to the terminal (defaults to 1) <br  />
 </li>
 </ul>
@@ -98,7 +98,84 @@ Basic usage</h1>
 Example</h1>
 <p>The source files contain an example text file (<code>extdata/test.txt</code>) to demonstrate the core functionality of panacea.</p>
 <div class="fragment"><div class="line">panacea --data &quot;extdata/test.txt&quot; --output. &quot;extdata/test.json&quot;</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md5"></a>
+</div><!-- fragment --><p>Input text file:</p>
+<p><img src="extdata/test.png" alt="Unstructured text file" class="inline"/></p>
+<p>Output as json (parsed as a table for convenience):</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Variable   </th><th class="markdownTableHeadNone">Value   </th><th class="markdownTableHeadNone">Unit   </th><th class="markdownTableHeadNone">Textfield   </th><th class="markdownTableHeadNone">Linenumber   </th><th class="markdownTableHeadNone">Characternumber    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">foo   </td><td class="markdownTableBodyNone">a,b,c,d   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">2   </td><td class="markdownTableBodyNone">5,6,7,8,9   </td><td class="markdownTableBodyNone">1,1,1,1    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">bar   </td><td class="markdownTableBodyNone">5,6,7,8   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">2   </td><td class="markdownTableBodyNone">5,6,7,8,9   </td><td class="markdownTableBodyNone">7,7,7,7    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">baz   </td><td class="markdownTableBodyNone">x,y,z,z   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">2   </td><td class="markdownTableBodyNone">5,6,7,8,9   </td><td class="markdownTableBodyNone">13,13,13,13    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">qux   </td><td class="markdownTableBodyNone">1,2,3,4   </td><td class="markdownTableBodyNone">s   </td><td class="markdownTableBodyNone">2   </td><td class="markdownTableBodyNone">5,6,7,8,9   </td><td class="markdownTableBodyNone">19,19,19,19    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">quz   </td><td class="markdownTableBodyNone">x,z,,   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">2   </td><td class="markdownTableBodyNone">5,6,7,8,9   </td><td class="markdownTableBodyNone">29,29,32,32    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">42e-3,42e-3   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">3   </td><td class="markdownTableBodyNone">12,13,14   </td><td class="markdownTableBodyNone">1,1    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">y   </td><td class="markdownTableBodyNone">4.3e-02,4.3e-02   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">3   </td><td class="markdownTableBodyNone">12,13,14   </td><td class="markdownTableBodyNone">9,9    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">z   </td><td class="markdownTableBodyNone">4.4e-01,4.4e-01   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">3   </td><td class="markdownTableBodyNone">12,13,14   </td><td class="markdownTableBodyNone">19,19    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">numeric   </td><td class="markdownTableBodyNone">42   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">4   </td><td class="markdownTableBodyNone">23   </td><td class="markdownTableBodyNone">1    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">numeric   </td><td class="markdownTableBodyNone">42   </td><td class="markdownTableBodyNone">um   </td><td class="markdownTableBodyNone">5   </td><td class="markdownTableBodyNone">24   </td><td class="markdownTableBodyNone">1    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">foo   </td><td class="markdownTableBodyNone">42   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">6   </td><td class="markdownTableBodyNone">25   </td><td class="markdownTableBodyNone">1    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">bar   </td><td class="markdownTableBodyNone">-41   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">7   </td><td class="markdownTableBodyNone">25   </td><td class="markdownTableBodyNone">11    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">baz   </td><td class="markdownTableBodyNone">40   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">8   </td><td class="markdownTableBodyNone">25   </td><td class="markdownTableBodyNone">23    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">foo   </td><td class="markdownTableBodyNone">42   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">9   </td><td class="markdownTableBodyNone">26   </td><td class="markdownTableBodyNone">1    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">bar   </td><td class="markdownTableBodyNone">-41   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">10   </td><td class="markdownTableBodyNone">26   </td><td class="markdownTableBodyNone">11    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">baz   </td><td class="markdownTableBodyNone">40   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">11   </td><td class="markdownTableBodyNone">26   </td><td class="markdownTableBodyNone">22    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">foo   </td><td class="markdownTableBodyNone">42   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">12   </td><td class="markdownTableBodyNone">27   </td><td class="markdownTableBodyNone">1    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">bar   </td><td class="markdownTableBodyNone">-41   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">13   </td><td class="markdownTableBodyNone">27   </td><td class="markdownTableBodyNone">11    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">baz   </td><td class="markdownTableBodyNone">40   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">14   </td><td class="markdownTableBodyNone">27   </td><td class="markdownTableBodyNone">23    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">-12761   </td><td class="markdownTableBodyNone">um   </td><td class="markdownTableBodyNone">15   </td><td class="markdownTableBodyNone">28   </td><td class="markdownTableBodyNone">23    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">y   </td><td class="markdownTableBodyNone">-13469   </td><td class="markdownTableBodyNone">um   </td><td class="markdownTableBodyNone">16   </td><td class="markdownTableBodyNone">28   </td><td class="markdownTableBodyNone">59    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">z   </td><td class="markdownTableBodyNone">3709   </td><td class="markdownTableBodyNone">um   </td><td class="markdownTableBodyNone">17   </td><td class="markdownTableBodyNone">28   </td><td class="markdownTableBodyNone">73    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">-12761   </td><td class="markdownTableBodyNone">um   </td><td class="markdownTableBodyNone">18   </td><td class="markdownTableBodyNone">29   </td><td class="markdownTableBodyNone">23    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">y   </td><td class="markdownTableBodyNone">-13469   </td><td class="markdownTableBodyNone">um   </td><td class="markdownTableBodyNone">19   </td><td class="markdownTableBodyNone">29   </td><td class="markdownTableBodyNone">59    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">z   </td><td class="markdownTableBodyNone">3709   </td><td class="markdownTableBodyNone">um   </td><td class="markdownTableBodyNone">20   </td><td class="markdownTableBodyNone">29   </td><td class="markdownTableBodyNone">73    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">-12761   </td><td class="markdownTableBodyNone">um   </td><td class="markdownTableBodyNone">21   </td><td class="markdownTableBodyNone">29   </td><td class="markdownTableBodyNone">108    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">y   </td><td class="markdownTableBodyNone">-13469   </td><td class="markdownTableBodyNone">um   </td><td class="markdownTableBodyNone">22   </td><td class="markdownTableBodyNone">29   </td><td class="markdownTableBodyNone">145    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">z   </td><td class="markdownTableBodyNone">3709   </td><td class="markdownTableBodyNone">um   </td><td class="markdownTableBodyNone">23   </td><td class="markdownTableBodyNone">29   </td><td class="markdownTableBodyNone">159    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">-12761   </td><td class="markdownTableBodyNone">um   </td><td class="markdownTableBodyNone">24   </td><td class="markdownTableBodyNone">30   </td><td class="markdownTableBodyNone">53    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">y   </td><td class="markdownTableBodyNone">-13469   </td><td class="markdownTableBodyNone">um   </td><td class="markdownTableBodyNone">25   </td><td class="markdownTableBodyNone">30   </td><td class="markdownTableBodyNone">119    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">z   </td><td class="markdownTableBodyNone">3709   </td><td class="markdownTableBodyNone">um   </td><td class="markdownTableBodyNone">26   </td><td class="markdownTableBodyNone">30   </td><td class="markdownTableBodyNone">133    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">numeric   </td><td class="markdownTableBodyNone">42   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">27   </td><td class="markdownTableBodyNone">31   </td><td class="markdownTableBodyNone">14    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">LoremIpsum   </td><td class="markdownTableBodyNone">42   </td><td class="markdownTableBodyNone">numeric   </td><td class="markdownTableBodyNone">28   </td><td class="markdownTableBodyNone">32   </td><td class="markdownTableBodyNone">1    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">LoremIpsum   </td><td class="markdownTableBodyNone">42   </td><td class="markdownTableBodyNone">numeric   </td><td class="markdownTableBodyNone">29   </td><td class="markdownTableBodyNone">33   </td><td class="markdownTableBodyNone">1    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">LoremIpsum   </td><td class="markdownTableBodyNone">42   </td><td class="markdownTableBodyNone">numeric   </td><td class="markdownTableBodyNone">30   </td><td class="markdownTableBodyNone">34   </td><td class="markdownTableBodyNone">1   </td></tr>
+</table>
+<h1><a class="anchor" id="autotoc_md5"></a>
 References</h1>
 <p>[2]: Findable, Accessible, Interoperable, and Reusable <br  />
  </p>
