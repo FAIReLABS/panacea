@@ -73,53 +73,50 @@ demonstrate the core functionality of panacea.
 ```bash
 panacea --data "extdata/test.txt" --output. "extdata/test.json"
 ```
-<!-- convert -size 1000x450 xc:white -font "FreeMono" -pointsize 12 -fill black -annotate +15+15 "@extdata/test.txt" extdata/test.png -->
+<!-- convert -size 570x690 xc:white -font "FreeMono" -pointsize 12 -fill black -annotate +15+15 "@extdata/test.txt" extdata/test.png -->
 
-Input text file:
+**Input text file:**
 
+<img src="extdata/test.png" width="1000" />
 
-![Unstructured text file](extdata/test.png)
+**Output json file:**   
+*Parsed as a table for convenience*
 
-Output as json (parsed as a table for convenience):
-
-| Variable   | Value           | Unit    | Textfield | Linenumber | Characternumber |
-|------------|-----------------|---------|-----------|------------|-----------------|
-| foo        | a,b,c,d         |         | 2         | 5,6,7,8,9  | 1,1,1,1         |
-| bar        | 5,6,7,8         |         | 2         | 5,6,7,8,9  | 7,7,7,7         |
-| baz        | x,y,z,z         |         | 2         | 5,6,7,8,9  | 13,13,13,13     |
-| qux        | 1,2,3,4         | s       | 2         | 5,6,7,8,9  | 19,19,19,19     |
-| quz        | x,z,,           |         | 2         | 5,6,7,8,9  | 29,29,32,32     |
-| x          | 42e-3,42e-3     |         | 3         | 12,13,14   | 1,1             |
-| y          | 4.3e-02,4.3e-02 |         | 3         | 12,13,14   | 9,9             |
-| z          | 4.4e-01,4.4e-01 |         | 3         | 12,13,14   | 19,19           |
-| numeric    | 42              |         | 4         | 23         | 1               |
-| numeric    | 42              | um      | 5         | 24         | 1               |
-| foo        | 42              |         | 6         | 25         | 1               |
-| bar        | -41             |         | 7         | 25         | 11              |
-| baz        | 40              |         | 8         | 25         | 23              |
-| foo        | 42              |         | 9         | 26         | 1               |
-| bar        | -41             |         | 10        | 26         | 11              |
-| baz        | 40              |         | 11        | 26         | 22              |
-| foo        | 42              |         | 12        | 27         | 1               |
-| bar        | -41             |         | 13        | 27         | 11              |
-| baz        | 40              |         | 14        | 27         | 23              |
-| x          | -12761          | um      | 15        | 28         | 23              |
-| y          | -13469          | um      | 16        | 28         | 59              |
-| z          | 3709            | um      | 17        | 28         | 73              |
-| x          | -12761          | um      | 18        | 29         | 23              |
-| y          | -13469          | um      | 19        | 29         | 59              |
-| z          | 3709            | um      | 20        | 29         | 73              |
-| x          | -12761          | um      | 21        | 29         | 108             |
-| y          | -13469          | um      | 22        | 29         | 145             |
-| z          | 3709            | um      | 23        | 29         | 159             |
-| x          | -12761          | um      | 24        | 30         | 53              |
-| y          | -13469          | um      | 25        | 30         | 119             |
-| z          | 3709            | um      | 26        | 30         | 133             |
-| numeric    | 42              |         | 27        | 31         | 14              |
-| LoremIpsum | 42              | numeric | 28        | 32         | 1               |
-| LoremIpsum | 42              | numeric | 29        | 33         | 1               |
-| LoremIpsum | 42              | numeric | 30        | 34         | 1               |
-
+| **Variable** | **Value**       | **Unit** | **Textfield** | **Linenumber** | **Characternumber** |
+|--------------|-----------------|----------|---------------|----------------|---------------------|
+| foo          | a,b,c,d         |          | 2             | 5,6,7,8,9      | 1,1,1,1             |
+| bar          | 5,6,7,8         |          | 2             | 5,6,7,8,9      | 7,7,7,7             |
+| baz          | x,y,z,z         |          | 2             | 5,6,7,8,9      | 13,13,13,13         |
+| qux          | 1,2,3,4         | s        | 2             | 5,6,7,8,9      | 19,19,19,19         |
+| quz          | x,z,,           |          | 2             | 5,6,7,8,9      | 29,29,32,32         |
+| x            | 42e-3,42e-3     |          | 3             | 12,13,14       | 1,1                 |
+| y            | 4.3e-02,4.3e-02 |          | 3             | 12,13,14       | 9,9                 |
+| z            | 4.4e-01,4.4e-01 |          | 3             | 12,13,14       | 19,19               |
+| numeric      | 42              |          | 4             | 24             | 1                   |
+| numeric      | 42              | um       | 5             | 25             | 1                   |
+| foo          | 42              |          | 6             | 26             | 1                   |
+| bar          | -41             |          | 7             | 26             | 11                  |
+| baz          | 40              |          | 8             | 26             | 23                  |
+| foo          | 42              |          | 9             | 27             | 1                   |
+| bar          | -41             |          | 10            | 27             | 11                  |
+| baz          | 40              |          | 11            | 27             | 22                  |
+| foo          | 42              |          | 12            | 28             | 1                   |
+| bar          | -41             |          | 13            | 28             | 11                  |
+| baz          | 40              |          | 14            | 28             | 23                  |
+| x            | -12761          | um       | 15            | 29             | 23                  |
+| y            | -13469          | um       | 16            | 29             | 59                  |
+| z            | 3709            | um       | 17            | 29             | 73                  |
+| x            | 1               | um       | 18            | 30             | 21                  |
+| y            | 2               | um       | 19            | 30             | 50                  |
+| z            | 3               | um       | 20            | 30             | 59                  |
+| x            | 4               | um       | 21            | 30             | 89                  |
+| x            | -12761          | um       | 22            | 31             | 42                  |
+| y            | -13469          | um       | 23            | 31             | 97                  |
+| z            | 3709            | um       | 24            | 31             | 111                 |
+| numeric      | 42              |          | 25            | 32             | 14                  |
+| LoremIpsum   | 42              | numeric  | 26            | 33             | 1                   |
+| LoremIpsum   | 42              | numeric  | 27            | 34             | 1                   |
+| LoremIpsum   | 42              | numeric  | 28            | 35             | 1                   |
 
 ## References
 
