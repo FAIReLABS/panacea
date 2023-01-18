@@ -1,0 +1,35 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: configure
+      run: ./configure
+    - name: document
+      run: doxygen
+#    - name: make
+#      run: make
+#    - name: make check
+#      run: make check
+#    - name: make distcheck
+#      run: make distcheck
+    - name: Deploy to GitHub pages 🚀
+      if: github.event_name != 'pull_request'
+      uses: JamesIves/github-pages-deploy-action@v4.4.1
+      with:
+        clean: false
+        branch: gh-pages
+        folder: docs
