@@ -18,6 +18,10 @@ jobs:
     - uses: actions/checkout@v3
     - name: configure
       run: ./configure
+    - name: install doxygen
+      run: |
+        sudo apt-get -y update
+        sudo apt-get -y install doxygen
     - name: document
       run: doxygen
 #    - name: make
