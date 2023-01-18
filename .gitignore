@@ -22,6 +22,5 @@ include/nlohmann
 *.log
 *.status
 aclocal.m4
-configure
 src/config.hpp
 src/config.hpp.in~
