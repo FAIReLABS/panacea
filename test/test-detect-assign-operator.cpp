@@ -1,25 +1,7 @@
-#define BOOST_TEST_MODULE Helpers
-
+#include <boost/test/unit_test.hpp>
 #include "panacea.hpp"
 
-#define BOOST_TEST_DYN_LINK
-#include <boost/test/unit_test.hpp>
-
-BOOST_AUTO_TEST_SUITE(PanaceaSuite)
-
-BOOST_AUTO_TEST_CASE(StringTrim)
-{
-	/* space delimited */
-	std::string str1(" string ");
-	std::string str2("string");
-	str1 = trim_str(str1);
-	BOOST_CHECK_EQUAL(str1, str2);
-
-	/* tabe delimited */
-	str1 = "	string	";
-	str1 = trim_str(str1);
-	BOOST_CHECK_EQUAL(str1, str2);
-}
+BOOST_AUTO_TEST_SUITE(DetectOperatorSuite)
 
 BOOST_AUTO_TEST_CASE(DetectOperator)
 {

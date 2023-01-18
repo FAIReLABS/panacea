@@ -37,8 +37,12 @@
 #include <regex> // regular expressions
 #include <vector> // vectors
 #include <set> // ordered punctuation
-#include <algorithm> // for e.g. min element  
+#include <algorithm> // for e.g. min element
+#include <iterator> // for adjecent differences
+#include <numeric> // for adjecent differences
+#if HAVE_NLOHMANN_JSON_HPP
 #include <nlohmann/json.hpp>// json parsing
+#endif
 
 /**
  * @brief Implementation of panacea data integration
@@ -58,7 +62,10 @@ class panacea
 
 	// friend functions
 	friend std::ostream &print(std::ostream &os, const panacea &dat);
+
+#if HAVE_NLOHMANN_JSON_HPP
 	friend nlohmann::ordered_json parse(const panacea &dat);
+#endif
 
 public:
 
@@ -160,6 +167,7 @@ private:
  */
 std::ostream &print(std::ostream &os, const panacea &dat);
 
+#if HAVE_NLOHMANN_JSON_HPP
 /**
  * @brief Parse panacea to JSON
  * 
@@ -167,6 +175,7 @@ std::ostream &print(std::ostream &os, const panacea &dat);
  * @return nlohmann::ordered_json 
  */
 nlohmann::ordered_json parse(const panacea &dat);
+#endif
 
 /**
  * @brief Detecting dates in a text file.

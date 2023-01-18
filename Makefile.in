@@ -1,0 +1,88 @@
+# @configure_input@
+package = @PACKAGE_NAME@
+version = @PACKAGE_VERSION@
+
+# paths
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+
+# VPATH-specific substitution variables
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+# package structure
+INCDIR = @srcdir@/include
+TESTDIR = @srcdir@/test
+DEBUGDIR = @srcdir@/bin
+SRCDIR = @srcdir@/src
+
+# CXX - reference to the system C++ compiler
+# LDFLAGS - linker flags
+# -lboost_unit_test_framework for unit testing
+# CXXFLAGS - C++ compiler flags
+# -std=c++1y for new standard c++
+# CPPFLAGS C/C++ preprocessor flags
+# -g needed for debugging with gdb based debuggers
+# -Wall shows almost all compile warnings
+# https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html
+
+# compiler
+CXX = @CXX@ -std=c++1y
+# compiler vars
+CXXFLAGS += @CXXFLAGS@ -I. -I$(srcdir) -I.. -I$(INCDIR)
+# linker flags for boost
+LDFLAGS += $(ARCHIVENAME) -lboost_unit_test_framework
+# pre-processor
+CPPFLAGS = @CPPFLAGS@
+
+# Installation tools
+INSTALL = @INSTALL@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+
+# source files
+SOURCE = $(wildcard $(SRCDIR)/*.cpp) # wildcard get all files with ext cpp
+
+# objects to build test
+OBJS = $(addprefix $(DEBUGDIR)/, $(patsubst %.cpp, %.o, $(notdir $(wildcard $(SRCDIR)/*.cpp))))
+TESTOBJS = $(addprefix $(DEBUGDIR)/, $(patsubst %.cpp, %.o, $(notdir $(wildcard $(TESTDIR)/*.cpp))))
+
+# executables for testing
+ARCHIVENAME = $(DEBUGDIR)/panacea.a
+TESTNAME = $(DEBUGDIR)/test-panacea
+DEBUGNAME = $(DEBUGDIR)/debug-panacea
+BUILDNAME = $(DEBUGDIR)/panacea
+
+include src/Makefile
+include test/Makefile
+
+all: $(BUILDNAME) $(DEBUGNAME) $(TESTNAME)
+
+# build binary
+panacea: $(BUILDNAME)
+
+# debug binary
+debug: $(DEBUGNAME)
+
+# unit testing
+test: $(TESTNAME)
+
+# installation
+install: 
+	$(INSTALL) -d $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) -m 0755 panacea $(DESTDIR)$(bindir)
+
+# remove installation
+uninstall: 
+	rm -f $(DESTDIR)$(bindir)/$(BUILDNAME)
+
+# make sure to include build directory
+FORCE:
+	-mkdir -p $(DEBUGDIR)
+
+clean: 
+	$(RM) $(DEBUGDIR)/*.d $(DEBUGDIR)/*.o $(ARCHIVENAME) $(TESTNAME) $(DEBUGNAME)
+
+.PHONY: all clean FORCE install uninstall

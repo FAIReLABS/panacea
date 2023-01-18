@@ -1,3 +1,4 @@
+#include "config.hpp" // autoconf
 #include "panacea.hpp"
 
 std::string paste_punct_values(std::string x,  std::string collapse)

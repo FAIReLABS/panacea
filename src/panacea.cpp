@@ -1,3 +1,4 @@
+#include "config.hpp" // autoconf
 #include "panacea.hpp"
 
 // member functions
@@ -39,6 +40,7 @@ std::ostream &print(std::ostream& os, const panacea &dat)
 	return os;
 }
 
+#if HAVE_NLOHMANN_JSON_HPP
 nlohmann::ordered_json parse(const panacea &dat)
 {
 	nlohmann::ordered_json k;
@@ -71,3 +73,4 @@ nlohmann::ordered_json parse(const panacea &dat)
 
 	return k;
 }
+#endif

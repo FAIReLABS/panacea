@@ -22,12 +22,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
+#include "config.hpp" // autoconf
 #include "panacea.hpp"
 
 // flags to main
 void main_args(int argc, char **argv, std::string &data, std::string &output, 
-	double &white, int verbose){
+	double &white, int &verbose){
 	
 	int i = 0;
 	
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 	// white space sensitivity
 	double white{ 0.7 };
 	// white space sensitivity
-	int verbose{ 0 };
+	int verbose{ 1 };
 	// evaluate input
 	main_args(argc, argv, data, output, white, verbose);
 
@@ -133,10 +133,14 @@ int main(int argc, char **argv)
 	if (verbose)
 		print(std::cout, results);
 
+#if HAVE_NLOHMANN_JSON_HPP
 	// write prettified JSON to another file
 	nlohmann::ordered_json j = parse(results);
 	std::ofstream ouf { output.c_str() };
 	ouf << std::setw(4) << j << std::endl;
+#else
+	std::cerr << "Could not parse JSON file. JSON library is missing.\n";
+#endif
 
 	// phase 4 - use results of phase 2 as gold labels to detect nominal variable value pairs
 

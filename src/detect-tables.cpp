@@ -1,3 +1,4 @@
+#include "config.hpp" // autoconf
 #include "panacea.hpp"
 
 // rowwise storage of potential columns of table
@@ -101,11 +102,13 @@ bool is_table(
 ) 
 {
 	// store relative counts characters
-	double rel_cnt;
+	double rel_cnt { 0.0 };
 	// store table values
-	double int_mad;
+	double int_mad { 0 };
 	// store previous vector of ints
-	std::vector<int> int_add;	
+	std::vector<int> int_add;
+	// is this a table
+	bool out {false};
 
 	// turn chunk lines into integer vectors with 1 representing numerics and
 	// 0 representing nominals 
@@ -145,7 +148,6 @@ bool is_table(
 	}
 
 
-
 	// this is the second table check if this is a table this number should be 
 	// low (range: 0-1)
 	if (chunk.size() > 1 && !int_add.empty())
@@ -179,12 +181,13 @@ bool is_table(
 			table.erase(table.begin(), table.end() - int_med);
 			origin.erase(origin.begin(), origin.end() - int_med );
 		}
+	
+
+		// adding the features together to reach a verdict
+		out = (int_mad <= 0.1 && rel_cnt < white && table_lines.size() > 2 && 
+			is_adjacent_chunk_lines(chunk_lines)) ? true : false;
 	}
 
-	// adding the features together to reach a verdict
-	bool out = (int_mad <= 0.1 && rel_cnt < white && table_lines.size() > 2 && 
-		is_adjacent_chunk_lines(chunk_lines)) ? true : false;
-	
 	return out;
 }
 

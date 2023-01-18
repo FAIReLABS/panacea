@@ -1,3 +1,4 @@
+#include "config.hpp" // autoconf
 #include "panacea.hpp"
 
 /* determine the assignement operators for unambigous case of numerical assignement */

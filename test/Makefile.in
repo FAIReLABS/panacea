@@ -1,0 +1,17 @@
+# archiving
+$(ARCHIVENAME): $(OBJS)
+	$(AR) $(ARFLAGS) $@ $^
+
+# build test
+$(TESTNAME): $(TESTOBJS) $(ARCHIVENAME)
+	$(CXX) -o $(TESTNAME) $^ $(LDFLAGS)
+
+# create .o object file from source files (these require to be in the bindir)
+$(DEBUGDIR)/%.o:$(SRCDIR)/%.cpp | $(DEBUGDIR) FORCE
+	$(COMPILE.cc) $< $(OUTPUT_OPTION)
+	$(COMPILE.cc) -MM -MP -MT $@ $< -o $(DEBUGDIR)/$*.d
+
+# create .o object file from test files (these require to be in the bindir)
+$(DEBUGDIR)/%.o:$(TESTDIR)/%.cpp | $(DEBUGDIR) FORCE
+	$(COMPILE.cc) $< $(OUTPUT_OPTION)
+	$(COMPILE.cc) -MM -MP -MT $@ $< -o $(DEBUGDIR)/$*.d

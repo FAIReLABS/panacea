@@ -1,3 +1,4 @@
+#include "config.hpp" // autoconf
 #include "panacea.hpp"
 
 bool detect_dates(std::string line_input, int &field_num, int &line_num, 

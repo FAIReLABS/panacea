@@ -10,6 +10,18 @@ bin/
 extdata/2018-01-19-GLENDON/
 # non-package functions
 spike/
-# generated doxyfile
+# generated doxyfile and makefiles
 Doxyfile
+Makefile
+src/Makefile
+test/Makefile
+# external header
 include/nlohmann
+# autotools
+*.cache
+*.log
+*.status
+aclocal.m4
+configure
+src/config.hpp
+src/config.hpp.in~
