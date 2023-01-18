@@ -82,7 +82,7 @@ panacea --data "extdata/test.txt" --output. "extdata/test.json"
 **Output json file:**   
 *Parsed as a table for convenience*
 
-| **Variable** | **Value**       | **Unit** | **Textfield** | **Linenumber** | **Characternumber** |
+| **Variable** | **Value**       | **Unit** | **Text field** | **Line number** | **Character number** |
 |--------------|-----------------|----------|---------------|----------------|---------------------|
 | foo          | a,b,c,d         |          | 2             | 5,6,7,8,9      | 1,1,1,1             |
 | bar          | 5,6,7,8         |          | 2             | 5,6,7,8,9      | 7,7,7,7             |
