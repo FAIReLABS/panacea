@@ -181,7 +181,7 @@
         "Unit": "",
         "Text field": 4,
         "Line number": [
-            23
+            24
         ],
         "Character number": [
             1
@@ -195,7 +195,7 @@
         "Unit": "um",
         "Text field": 5,
         "Line number": [
-            24
+            25
         ],
         "Character number": [
             1
@@ -209,7 +209,7 @@
         "Unit": "",
         "Text field": 6,
         "Line number": [
-            25
+            26
         ],
         "Character number": [
             1
@@ -223,7 +223,7 @@
         "Unit": "",
         "Text field": 7,
         "Line number": [
-            25
+            26
         ],
         "Character number": [
             11
@@ -237,7 +237,7 @@
         "Unit": "",
         "Text field": 8,
         "Line number": [
-            25
+            26
         ],
         "Character number": [
             23
@@ -251,7 +251,7 @@
         "Unit": "",
         "Text field": 9,
         "Line number": [
-            26
+            27
         ],
         "Character number": [
             1
@@ -265,7 +265,7 @@
         "Unit": "",
         "Text field": 10,
         "Line number": [
-            26
+            27
         ],
         "Character number": [
             11
@@ -279,7 +279,7 @@
         "Unit": "",
         "Text field": 11,
         "Line number": [
-            26
+            27
         ],
         "Character number": [
             22
@@ -293,7 +293,7 @@
         "Unit": "",
         "Text field": 12,
         "Line number": [
-            27
+            28
         ],
         "Character number": [
             1
@@ -307,7 +307,7 @@
         "Unit": "",
         "Text field": 13,
         "Line number": [
-            27
+            28
         ],
         "Character number": [
             11
@@ -321,7 +321,7 @@
         "Unit": "",
         "Text field": 14,
         "Line number": [
-            27
+            28
         ],
         "Character number": [
             23
@@ -335,7 +335,7 @@
         "Unit": "um",
         "Text field": 15,
         "Line number": [
-            28
+            29
         ],
         "Character number": [
             23
@@ -349,7 +349,7 @@
         "Unit": "um",
         "Text field": 16,
         "Line number": [
-            28
+            29
         ],
         "Character number": [
             59
@@ -363,7 +363,7 @@
         "Unit": "um",
         "Text field": 17,
         "Line number": [
-            28
+            29
         ],
         "Character number": [
             73
@@ -372,85 +372,57 @@
     {
         "Variable": "x",
         "Value": [
-            "-12761"
+            "1"
         ],
         "Unit": "um",
         "Text field": 18,
         "Line number": [
-            29
+            30
         ],
         "Character number": [
-            23
+            21
         ]
     },
     {
         "Variable": "y",
         "Value": [
-            "-13469"
+            "2"
         ],
         "Unit": "um",
         "Text field": 19,
         "Line number": [
-            29
+            30
+        ],
+        "Character number": [
+            50
+        ]
+    },
+    {
+        "Variable": "z",
+        "Value": [
+            "3"
+        ],
+        "Unit": "um",
+        "Text field": 20,
+        "Line number": [
+            30
         ],
         "Character number": [
             59
         ]
     },
     {
-        "Variable": "z",
-        "Value": [
-            "3709"
-        ],
-        "Unit": "um",
-        "Text field": 20,
-        "Line number": [
-            29
-        ],
-        "Character number": [
-            73
-        ]
-    },
-    {
         "Variable": "x",
         "Value": [
-            "-12761"
+            "4"
         ],
         "Unit": "um",
         "Text field": 21,
         "Line number": [
-            29
+            30
         ],
         "Character number": [
-            108
-        ]
-    },
-    {
-        "Variable": "y",
-        "Value": [
-            "-13469"
-        ],
-        "Unit": "um",
-        "Text field": 22,
-        "Line number": [
-            29
-        ],
-        "Character number": [
-            145
-        ]
-    },
-    {
-        "Variable": "z",
-        "Value": [
-            "3709"
-        ],
-        "Unit": "um",
-        "Text field": 23,
-        "Line number": [
-            29
-        ],
-        "Character number": [
-            159
+            89
         ]
     },
     {
@@ -459,12 +431,12 @@
             "-12761"
         ],
         "Unit": "um",
-        "Text field": 24,
+        "Text field": 22,
         "Line number": [
-            30
+            31
         ],
         "Character number": [
-            53
+            42
         ]
     },
     {
@@ -473,12 +445,12 @@
             "-13469"
         ],
         "Unit": "um",
-        "Text field": 25,
+        "Text field": 23,
         "Line number": [
-            30
+            31
         ],
         "Character number": [
-            119
+            97
         ]
     },
     {
@@ -487,12 +459,12 @@
             "3709"
         ],
         "Unit": "um",
-        "Text field": 26,
+        "Text field": 24,
         "Line number": [
-            30
+            31
         ],
         "Character number": [
-            133
+            111
         ]
     },
     {
@@ -501,9 +473,9 @@
             "42"
         ],
         "Unit": "",
-        "Text field": 27,
+        "Text field": 25,
         "Line number": [
-            31
+            32
         ],
         "Character number": [
             14
@@ -515,21 +487,7 @@
             "42"
         ],
         "Unit": "numeric",
-        "Text field": 28,
-        "Line number": [
-            32
-        ],
-        "Character number": [
-            1
-        ]
-    },
-    {
-        "Variable": "Lorem Ipsum ",
-        "Value": [
-            "42"
-        ],
-        "Unit": "numeric",
-        "Text field": 29,
+        "Text field": 26,
         "Line number": [
             33
         ],
@@ -543,9 +501,23 @@
             "42"
         ],
         "Unit": "numeric",
-        "Text field": 30,
+        "Text field": 27,
         "Line number": [
             34
+        ],
+        "Character number": [
+            1
+        ]
+    },
+    {
+        "Variable": "Lorem Ipsum ",
+        "Value": [
+            "42"
+        ],
+        "Unit": "numeric",
+        "Text field": 28,
+        "Line number": [
+            35
         ],
         "Character number": [
             1

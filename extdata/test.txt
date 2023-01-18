@@ -14,11 +14,12 @@ x       y         z
 42e-3   4.3e-02   4.4e-01
 
 
-Lorem ipsum dolor sit amet, 42 consectetur adipiscing elit, sed do eiusmod 42 tempor incididunt ut 
-labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-nisi 42 ut aliquip ex ea commodo consequat. Duis aute irure dolor 42 in reprehenderit in voluptate 
-velit esse cillum dolore eu fugiat 42 nulla pariatur. Excepteur sint occaecat cupidatat non proident,
- sunt in culpa qui officia deserunt mollit anim id est laborum.
+Lorem ipsum dolor sit amet, 42 consectetur adipiscing elit, sed do eiusmod 42 
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
+quis nostrud exercitation ullamco laboris nisi 42 ut aliquip ex ea commodo 
+consequat. Duis aute irure dolor 42 in reprehenderit in voluptate velit esse 
+cillum dolore eu fugiat 42 nulla pariatur. Excepteur sint occaecat cupidatat 
+non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 numeric   : 42
 numeric   : 42 um
@@ -26,15 +27,9 @@ foo = 42 / bar = -41 / baz = 40
 foo = 42  bar = -41  baz = 40 
 foo = 42 : bar = -41 : baz = 40 
 compounded numeric   : x=-12761 um / y=-13469 um / z=3709 um
-compounded numeric   : x=-12761 um / y=-13469 um / z=3709 um / compounded numeric   : x=-12761 um / y=-13469 um / z=3709 um
-double compounded numeric   : compounded numeric   : x=-12761 um / y=-13469 um / z=3709 um
+compounded numeric : x=1 um / y=2 um / z=3 um / compounded numeric : x=4 um 
+compounded numeric : compounded numeric : x=-12761 um / y=-13469 um / z=3709 um
 Lorem Ipsum (numeric : 42) Lorem Ipsum
 Lorem Ipsum (numeric) : 42
 Lorem Ipsum (numeric) : 42 /
-Lorem Ipsum (numeric) : 42 )
-
-compounded nominal   : x=foo y=bar z=bar  baz 
-
-compounded nominal1   : x=foo y=bar z=bar  baz 
-compounded nominal2   : x=foo y=bar z=bar  baz 
-compounded nominal3  : x=foo y=bar z=bar  baz 
+Lorem Ipsum (numeric) : 42)
