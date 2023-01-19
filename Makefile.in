@@ -70,9 +70,9 @@ debug: $(DEBUGNAME)
 test: $(TESTNAME)
 
 # installation
-install: 
+install:
 	$(INSTALL) -d $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) -m 0755 panacea $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) -m 0755 $(BUILDNAME) $(DESTDIR)$(bindir)
 
 # remove installation
 uninstall: 

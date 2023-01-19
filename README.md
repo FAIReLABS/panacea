@@ -1,7 +1,10 @@
 # Panacea
 
 <!-- badges: start -->
-
+[![GNU General Public License](https://img.shields.io/badge/license-GPL%20v3-orange.svg?style=flat-square)](http://www.gnu.org/licenses/gpl-3.0.en.html)
+[![GitHub](https://img.shields.io/github/release/FAIReLABS/panacea.svg?style=flat-square)](https://github.com/FAIReLABS/panacea/releases)
+![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/FAIReLABS/panacea/c-cpp.yml)
+[![Codecov](https://img.shields.io/codecov/c/github/FAIReLABS/panacea/master.svg?style=flat-square)]()
 
 <!-- badges: end -->
 
