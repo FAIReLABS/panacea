@@ -76,7 +76,7 @@ install: panacea
 
 # remove installation
 uninstall: 
-	rm -f $(DESTDIR)$(bindir)/$(BUILDNAME)
+	rm -f $(DESTDIR)$(bindir)/panacea
 
 # make sure to include build directory
 FORCE:
