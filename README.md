@@ -7,6 +7,8 @@
 [![Codecov](https://img.shields.io/codecov/c/github/FAIReLABS/panacea/master.svg?style=flat-square)]()
 
 <!-- badges: end -->
+## Demo
+![demo](./panacea-demo.webp)
 
 **Package name:** Portable ANalytical data Aggregation and Coordination
 for database Entry and Access (panacea)
