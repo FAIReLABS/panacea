@@ -68,24 +68,27 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a href="http://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/badge/license-GPL%20v3-orange.svg?style=flat-square" alt="GNU General Public License" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/FAIReLABS/panacea/releases"><img src="https://img.shields.io/github/release/FAIReLABS/panacea.svg?style=flat-square" alt="GitHub" style="pointer-events: none;" class="inline"/></a> <img src="https://img.shields.io/github/actions/workflow/status/FAIReLABS/panacea/c-cpp.yml" alt="GitHub Workflow Status (with branch)" class="inline"/> [<img src="https://img.shields.io/codecov/c/github/FAIReLABS/panacea/master.svg?style=flat-square" alt="Codecov" style="pointer-events: none;" class="inline"/>]()</p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Demo</h1>
+<p><img src="./panacea-demo.webp" alt="demo" class="inline"/></p>
 <p><b>Package name:</b> Portable ANalytical data Aggregation and Coordination for database Entry and Access (panacea)</p>
 <p>This package is currently a concept. See also the ISC proposal <a href="https://github.com/FAIReLABS/isc-proposal-panacea">1</a>.</p>
 <p>Panacea is aimed at making data streams in e.g. analytical laboratory settings more transparent and easily accessible. This is needed as closed sourced vendor-supplied software for analytical instruments often act as black boxes, thereby inhibiting access to raw data and full-disclosure of critical processing and transformations.</p>
 <p>Panacea would constitute at it most fundamental level a parser for text based data in poorly structured formats (e.g. non-tabular). It detects variable, value, and, optionally, units triplets.</p>
 <p>Ultimately, panacea could help establish fully integrated laboratories with centralised data management. Hence this solution contributes to the FAIR [2] guiding principles for data, thereby stimulating innovation, and inclusiveness through open science.</p>
-<h1><a class="anchor" id="autotoc_md1"></a>
+<h1><a class="anchor" id="autotoc_md2"></a>
 Configure and build panacea</h1>
 <p>After copying the source files, start the build process of panacea as follows:</p>
 <div class="fragment"><div class="line">./configure</div>
 </div><!-- fragment --><p> JSON for Modern C++ is needed to enable parsing of results into the JSON format. This can be achieved by cloning the nlohmann/json repository and performing a complete build. Alternatively one can just copy the header file json.hpp to your desired location and do the following during the build process:</p>
 <div class="fragment"><div class="line">./configure CXXFLAGS=&quot;-I/path/to/nlohmann/json.hpp&quot;</div>
 </div><!-- fragment --><p> Note, that the nlohmann/json.hpp is not a breaking build requirement for panacea. Results can alternatively be streamed to the terminal.</p>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md3"></a>
 Installation</h1>
 <p>To install panacea use the <code>install</code> target of the makefile, like so:</p>
 <div class="fragment"><div class="line">make install</div>
 </div><!-- fragment --><p>To customise the installation query the GNU make manual <a href="https://www.gnu.org/software/make/manual">3</a>.</p>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<h1><a class="anchor" id="autotoc_md4"></a>
 Basic usage</h1>
 <p>Currenlty, panacea only has four control options, wich can be modified with the following flags:</p>
 <ul>
@@ -95,7 +98,7 @@ Basic usage</h1>
 <li><code>--verbose</code>: whether input filename and output results should be streamed to the terminal (defaults to 1) <br  />
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md4"></a>
+<h1><a class="anchor" id="autotoc_md5"></a>
 Example</h1>
 <p>The source files contain an example text file (<code>extdata/test.txt</code>) to demonstrate the core functionality of panacea.</p>
 <div class="fragment"><div class="line">panacea --data &quot;extdata/test.txt&quot; --output. &quot;extdata/test.json&quot;</div>
@@ -173,7 +176,7 @@ Example</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">LoremIpsum   </td><td class="markdownTableBodyNone">42   </td><td class="markdownTableBodyNone">numeric   </td><td class="markdownTableBodyNone">28   </td><td class="markdownTableBodyNone">35   </td><td class="markdownTableBodyNone">1   </td></tr>
 </table>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md6"></a>
 References</h1>
 <p>[2]: Findable, Accessible, Interoperable, and Reusable <br  />
  </p>
