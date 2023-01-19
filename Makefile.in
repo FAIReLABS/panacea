@@ -70,7 +70,7 @@ debug: $(DEBUGNAME)
 test: $(TESTNAME)
 
 # installation
-install:
+install: panacea
 	$(INSTALL) -d $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) -m 0755 $(BUILDNAME) $(DESTDIR)$(bindir)
 
